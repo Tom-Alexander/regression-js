@@ -9,32 +9,32 @@ regression.js will return an object containing an equation array and a points ar
 Linear regression 
 -----------------
 
-equation: ''''[gradient, y-intercept]'''' in the form y = mx + c 
-''''
+equation: ```[gradient, y-intercept]``` in the form y = mx + c 
+
     var data = [[0,1],[32, 67] .... [12, 79]]   
     var result = regression('linear', data)
-'''' 
+``` 
             
 Exponential regression 
 ----------------------
 
-equation: ''''[a, b]'''' in the form y = ae^bx 
+equation: ```[a, b]``` in the form y = ae^bx 
             
 Logarithmic regression 
 ----------------------
 
-equation: ''''[a, b]'''' in the form y = a + b ln x 
+equation: ```[a, b]``` in the form y = a + b ln x 
             
 Power law regression 
 --------------------
 
-equation: ''''[a, b]'''' in the form y = ax^b 
+equation: ```[a, b]``` in the form y = ax^b 
             
 Polynomial regression 
----------------------
+---------------------```
 
-equation: ''''[a0, .... , an]'''' in the form a0x^n ... + anx^0 
-''''
+equation: ```[a0, .... , an]``` in the form a0x^n ... + anx^0 
+```
     var data = [[0,1],[32, 67] .... [12, 79]]
     var result = regression('polynomial', 4)
-'''' 
+``` 
