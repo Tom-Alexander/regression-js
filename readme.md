@@ -10,7 +10,7 @@ Linear regression
 -----------------
 
 equation: ```[gradient, y-intercept]``` in the form y = mx + c 
-
+'''
     var data = [[0,1],[32, 67] .... [12, 79]]   
     var result = regression('linear', data)
 ``` 
