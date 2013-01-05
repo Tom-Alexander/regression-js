@@ -31,7 +31,7 @@ Power law regression
 equation: ```[a, b]``` in the form y = ax^b 
             
 Polynomial regression 
----------------------```
+---------------------
 
 equation: ```[a0, .... , an]``` in the form a0x^n ... + anx^0 
 ```
