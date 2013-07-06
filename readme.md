@@ -11,8 +11,8 @@ Linear regression
 
 equation: ```[gradient, y-intercept]``` in the form y = mx + c 
 ``` 
-    var data = [[0,1],[32, 67] .... [12, 79]]   
-    var result = regression('linear', data)
+var data = [[0,1],[32, 67] .... [12, 79]];
+var result = regression('linear', data);
 ``` 
             
 Exponential regression 
@@ -35,6 +35,6 @@ Polynomial regression
 
 equation: ```[a0, .... , an]``` in the form a0x^n ... + anx^0 
 ```
-    var data = [[0,1],[32, 67] .... [12, 79]]
-    var result = regression('polynomial', 4)
-``` 
+var data = [[0,1],[32, 67] .... [12, 79]];
+var result = regression('polynomial', data, 4);
+```
