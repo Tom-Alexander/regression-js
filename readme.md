@@ -33,7 +33,7 @@ equation: ```[a, b]``` in the form y = ax^b
 Polynomial regression 
 ---------------------
 
-equation: ```[a0, .... , an]``` in the form a0x^n ... + anx^0 
+equation: ```[a0, .... , an]``` in the form a0x^0 ... + anx^n
 ```
 var data = [[0,1],[32, 67] .... [12, 79]];
 var result = regression('polynomial', data, 4);
