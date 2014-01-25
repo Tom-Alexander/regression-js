@@ -173,7 +173,8 @@
                     var string = 'y = ';
 
                     for(var i = equation.length-1; i >= 0; i--){
-                      if(i > 0) string += Math.round(equation[i]*100) / 100 + 'x^' + (i + 1) + ' + ';
+                      if(i > 1) string += Math.round(equation[i]*100) / 100 + 'x^' + i + ' + ';
+                      else if (i == 1) string += Math.round(equation[i]*100) / 100 + 'x' + ' + ';
                       else string += Math.round(equation[i]*100) / 100;
                     }
 
