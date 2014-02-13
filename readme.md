@@ -38,3 +38,12 @@ equation: ```[a0, .... , an]``` in the form a0x^0 ... + anx^n
 var data = [[0,1],[32, 67] .... [12, 79]];
 var result = regression('polynomial', data, 4);
 ```
+
+Filling the blanks and forecasting
+==================================
+
+```
+var data = [[0,1], [32, null] .... [12, 79]];
+```
+
+If you use a ```null``` value for data, regressionjs will fill it using the trend.

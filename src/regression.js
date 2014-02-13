@@ -45,11 +45,13 @@
                 var sum = [0, 0, 0, 0, 0], n = 0, results = [];
 
                 for (; n < data.length; n++) {
+                  if (data[n][1]) {
                     sum[0] += data[n][0];
                     sum[1] += data[n][1];
                     sum[2] += data[n][0] * data[n][0];
                     sum[3] += data[n][0] * data[n][1];
                     sum[4] += data[n][1] * data[n][1];
+                  }
                 }
 
                 var gradient = (n * sum[3] - sum[0] * sum[1]) / (n * sum[2] - sum[0] * sum[0]);
@@ -70,12 +72,14 @@
                 var sum = [0, 0, 0, 0, 0, 0], n = 0, results = [];
 
                 for (len = data.length; n < len; n++) {
+                  if (data[n][1]) {
                     sum[0] += data[n][0];
                     sum[1] += data[n][1];
                     sum[2] += data[n][0] * data[n][0] * data[n][1];
                     sum[3] += data[n][1] * Math.log(data[n][1]);
                     sum[4] += data[n][0] * data[n][1] * Math.log(data[n][1]);
                     sum[5] += data[n][0] * data[n][1];
+                  }
                 }
 
                 var denominator = (sum[1] * sum[2] - sum[5] * sum[5]);
@@ -96,10 +100,12 @@
                 var sum = [0, 0, 0, 0], n = 0, results = [];
 
                 for (len = data.length; n < len; n++) {
+                  if (data[n][1]) {
                     sum[0] += Math.log(data[n][0]);
                     sum[1] += data[n][1] * Math.log(data[n][0]);
                     sum[2] += data[n][1];
                     sum[3] += Math.pow(Math.log(data[n][0]), 2);
+                  }
                 }
 
                 var B = (n * sum[1] - sum[2] * sum[0]) / (n * sum[3] - sum[0] * sum[0]);
@@ -119,10 +125,12 @@
                 var sum = [0, 0, 0, 0], n = 0, results = [];
 
                 for (len = data.length; n < len; n++) {
+                  if (data[n][1]) {
                     sum[0] += Math.log(data[n][0]);
                     sum[1] += Math.log(data[n][1]) * Math.log(data[n][0]);
                     sum[2] += Math.log(data[n][1]);
                     sum[3] += Math.pow(Math.log(data[n][0]), 2);
+                  }
                 }
 
                 var B = (n * sum[1] - sum[2] * sum[0]) / (n * sum[3] - sum[0] * sum[0]);
@@ -146,13 +154,17 @@
 
                         for (; i < k; i++) {
                            for (var l = 0, len = data.length; l < len; l++) {
+                              if (data[l][1]) {
                                a += Math.pow(data[l][0], i) * data[l][1];
+                              }
                             }
                             lhs.push(a), a = 0;
                             var c = [];
                             for (var j = 0; j < k; j++) {
                                for (var l = 0, len = data.length; l < len; l++) {
+                                  if (data[l][1]) {
                                    b += Math.pow(data[l][0], i + j);
+                                  }
                                 }
                                 c.push(b), b = 0;
                             }
