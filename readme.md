@@ -42,7 +42,7 @@ var result = regression('polynomial', data, 4);
 Lastvalue
 ---------
 
-Not exactly a regression. Uses the last value the fill the blanks when forecasting.
+Not exactly a regression. Uses the last value to fill the blanks when forecasting.
 
 
 
