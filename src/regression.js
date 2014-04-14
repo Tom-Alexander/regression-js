@@ -191,6 +191,22 @@
                     }
 
                 return {equation: equation, points: results, string: string};
+            },
+
+            lastvalue: function(data) {
+              var results = [];
+              var lastvalue = null;
+              for (var i = 0; i < data.length; i++) {
+                if (data[i][1]) {
+                  lastvalue = data[i][1];
+                  results.push([data[i][0], data[i][1]]);
+                }
+                else {
+                  results.push([data[i][0], lastvalue]);
+                }
+              }
+
+              return {equation: [lastvalue], points: results, string: "" + lastvalue};
             }
         };
 
