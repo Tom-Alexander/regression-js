@@ -39,6 +39,13 @@ var data = [[0,1],[32, 67] .... [12, 79]];
 var result = regression('polynomial', data, 4);
 ```
 
+Lastvalue
+---------
+
+Not exactly a regression. Uses the last value to fill the blanks when forecasting.
+
+
+
 Filling the blanks and forecasting
 ==================================
 
