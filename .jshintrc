@@ -1,0 +1,8 @@
+{
+    "node": true,
+    "browser": true,
+    "camelcase": true,
+    "newcap" : true,
+    "plusplus" : true,
+    "quotmark" : true
+}

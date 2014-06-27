@@ -1,6 +1,6 @@
 {
   "name": "regression-js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "homepage": "https://github.com/Tom-Alexander/regression-js",
   "authors": [
     "Tom-Alexander <me@tomalexander.co.nz>"
@@ -10,6 +10,14 @@
   "ignore": [
     "node_modules",
     "bower_components",
-    "example/*"
+    "example",
+    "**/.*",
+    "build",
+    "speed",
+    "test",
+    "*.md",
+    "AUTHORS.txt",
+    "gulpfile.js",
+    "package.json"
   ]
 }
