@@ -1,14 +1,15 @@
 'use strict';
 
-var gulp = require('gulp'),
-    browserify = require('browserify'),
-    streamify  = require('gulp-streamify'),
-    source = require('vinyl-source-stream'),
-    uglify = require('gulp-uglify'),
-    rename = require('gulp-rename'),
-    license = require('gulp-license'),
-    notify = require('gulp-notify'),
-    jshint = require('gulp-jshint');
+var gulp        = require('gulp'),
+    browserify  = require('browserify'),
+    streamify   = require('gulp-streamify'),
+    source      = require('vinyl-source-stream'),
+    uglify      = require('gulp-uglify'),
+    rename      = require('gulp-rename'),
+    license     = require('gulp-license'),
+    notify      = require('gulp-notify'),
+    jshint      = require('gulp-jshint'),
+    mocha       = require('gulp-mocha');
 
 gulp.task('build', function () {
     return browserify('./src/regression')
@@ -29,4 +30,10 @@ gulp.task('lint', function () {
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('default', ['lint', 'build']);
+gulp.task('test', function () {
+    return gulp
+        .src('test/*.test.js')
+        .pipe(mocha());
+});
+
+gulp.task('default', ['lint', 'test', 'build']);

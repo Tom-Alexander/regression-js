@@ -1,9 +1,16 @@
 {
-    "name": "regression-js",
-    "version": "1.2.0",
-    "description" : "Javascript least squares data fitting",
+    "name": "regression",
+    "description" : "Javascript least squares data fitting methods",
+    "version": "1.3.1",
     "author" : "Tom Alexander <me@tomalexander.co.nz>",
-    "main" : "src/regression.js",
+    "keywords" : [
+        "regression",
+        "data",
+        "fitting",
+        "modelling",
+        "analysis"
+    ],
+    "repository": "Tom-Alexander/regression-js",
     "license" : "MIT",
     "devDependencies": {
         "gulp" : "*",
@@ -14,10 +21,7 @@
         "gulp-jshint" : "*",
         "gulp-uglify" : "*",
         "gulp-rename" : "*",
-        "gulp-notify" : "*"
-     },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Tom-Alexander/regression-js.git"
-    }
+        "gulp-notify" : "*",
+        "gulp-mocha" : "0.4.1"
+     }
 }
