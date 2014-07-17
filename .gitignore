@@ -2,3 +2,4 @@
 thumbs.db
 *.log
 node_modules/
+.idea
