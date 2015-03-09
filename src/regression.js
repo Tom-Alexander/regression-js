@@ -45,7 +45,7 @@
                 var sum = [0, 0, 0, 0, 0], n = 0, results = [];
 
                 for (; n < data.length; n++) {
-                  if (data[n][1]) {
+                  if (data[n][1] != null) {
                     sum[0] += data[n][0];
                     sum[1] += data[n][1];
                     sum[2] += data[n][0] * data[n][0];
@@ -72,7 +72,7 @@
                 var sum = [0, 0, 0, 0, 0, 0], n = 0, results = [];
 
                 for (len = data.length; n < len; n++) {
-                  if (data[n][1]) {
+                  if (data[n][1] != null) {
                     sum[0] += data[n][0];
                     sum[1] += data[n][1];
                     sum[2] += data[n][0] * data[n][0] * data[n][1];
@@ -100,7 +100,7 @@
                 var sum = [0, 0, 0, 0], n = 0, results = [];
 
                 for (len = data.length; n < len; n++) {
-                  if (data[n][1]) {
+                  if (data[n][1] != null) {
                     sum[0] += Math.log(data[n][0]);
                     sum[1] += data[n][1] * Math.log(data[n][0]);
                     sum[2] += data[n][1];
@@ -125,7 +125,7 @@
                 var sum = [0, 0, 0, 0], n = 0, results = [];
 
                 for (len = data.length; n < len; n++) {
-                  if (data[n][1]) {
+                  if (data[n][1] != null) {
                     sum[0] += Math.log(data[n][0]);
                     sum[1] += Math.log(data[n][1]) * Math.log(data[n][0]);
                     sum[2] += Math.log(data[n][1]);
@@ -154,7 +154,7 @@
 
                         for (; i < k; i++) {
                            for (var l = 0, len = data.length; l < len; l++) {
-                              if (data[l][1]) {
+                              if (data[l][1] != null) {
                                a += Math.pow(data[l][0], i) * data[l][1];
                               }
                             }
@@ -162,7 +162,7 @@
                             var c = [];
                             for (var j = 0; j < k; j++) {
                                for (var l = 0, len = data.length; l < len; l++) {
-                                  if (data[l][1]) {
+                                  if (data[l][1] != null) {
                                    b += Math.pow(data[l][0], i + j);
                                   }
                                 }
