@@ -2,7 +2,7 @@
   "name": "regression",
   "description" : "Javascript least squares data fitting methods",
   "author" : "Tom Alexander <me@tomalexander.co.nz>",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license" : "MIT",
   "repository": "Tom-Alexander/regression-js",
   "keywords" : [
