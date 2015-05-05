@@ -3,34 +3,43 @@ regression.js is a javascript library containing a collection of least squares f
 Usage
 =====
 Most regressions require only two parameters - the regression method (linear, exponential, logarithmic, power or polynomial) and a data source. A third parameter can be used to define the degree of a polynomial when a polynomial regression is required.
-            
+
 regression.js will return an object containing an equation array and a points array.
 
-Linear regression 
+Linear regression
 -----------------
 
-equation: ```[gradient, y-intercept]``` in the form y = mx + c 
-``` 
+equation: ```[gradient, y-intercept]``` in the form y = mx + c
+```
 var data = [[0,1],[32, 67] .... [12, 79]];
 var result = regression('linear', data);
-``` 
-            
-Exponential regression 
+```
+
+Linear regression through the origin
+-----------------
+
+equation: ```[gradient]``` in the form y = mx
+```
+var data = [[0,1],[32, 67] .... [12, 79]];
+var result = regression('linearThroughOrigin', data);
+```
+
+Exponential regression
 ----------------------
 
-equation: ```[a, b]``` in the form y = ae^bx 
-            
-Logarithmic regression 
+equation: ```[a, b]``` in the form y = ae^bx
+
+Logarithmic regression
 ----------------------
 
-equation: ```[a, b]``` in the form y = a + b ln x 
-            
-Power law regression 
+equation: ```[a, b]``` in the form y = a + b ln x
+
+Power law regression
 --------------------
 
-equation: ```[a, b]``` in the form y = ax^b 
-            
-Polynomial regression 
+equation: ```[a, b]``` in the form y = ax^b
+
+Polynomial regression
 ---------------------
 
 equation: ```[a0, .... , an]``` in the form a0x^0 ... + anx^n
