@@ -9,7 +9,7 @@
 *
 **/
 
-;(function() {
+;(function(ns) {
     'use strict';
 
     var gaussianElimination = function(a, o) {
@@ -242,7 +242,7 @@ var regression = (function(method, data, order) {
 if (typeof exports !== 'undefined') {
     module.exports = regression;
 } else {
-    window.regression = regression;
+    ns.regression = regression;
 }
 
-}());
+}(this));
