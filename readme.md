@@ -4,7 +4,11 @@ Usage
 =====
 Most regressions require only two parameters - the regression method (linear, exponential, logarithmic, power or polynomial) and a data source. A third parameter can be used to define the degree of a polynomial when a polynomial regression is required.
 
-regression.js will return an object containing an equation array and a points array.
+All models will return an object with the following properties:
+- `equation` an array containing the coefficients of the equation
+- `string` A string representation of the equation
+- `points` an array containing the predicted data
+- `r2` the coefficient of determination
 
 Linear regression
 -----------------
@@ -58,10 +62,10 @@ Not exactly a regression. Uses the last value to fill the blanks when forecastin
 
 
 Filling the blanks and forecasting
-==================================
+---------
 
 ```
 var data = [[0,1], [32, null] .... [12, 79]];
 ```
 
-If you use a ```null``` value for data, regressionjs will fill it using the trend.
+If you use a ```null``` value for data, regression-js will fill it using the trend.
