@@ -13,6 +13,8 @@ equation: ```[gradient, y-intercept]``` in the form y = mx + c
 ```
 var data = [[0,1],[32, 67] .... [12, 79]];
 var result = regression('linear', data);
+var slope = result.equation[0];
+var yIntercept = result.equation[1];
 ```
 
 Linear regression through the origin
