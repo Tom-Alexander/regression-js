@@ -7,10 +7,31 @@
 * copyright(c) 2013 Tom Alexander
 * Licensed under the MIT license.
 *
+* @module regression - Least-squares regression functions for JavaScript
 **/
 
-;(function(ns) {
-    'use strict';
+(function _umd(global, factory) {
+  // UMD Format for exports. Works with all module systems: AMD/RequireJS, CommonJS, and global
+  var mod;
+
+  // AMD
+  if (typeof define === 'function' && define.amd) {
+    define('regression', ['exports'], factory);
+  } else if (typeof exports !== 'undefined') {
+    factory(exports);
+  } else {
+    mod = {
+      exports: {},
+    };
+
+    factory(mod.exports);
+    global.regression = mod.exports;
+  }
+})(this, function _regressionUmdFactory(exports) {
+  'use strict';
+
+  // For node.js and CommonJS
+  Object.defineProperty(exports, '__esModule', { value: true });
 
     var determinationCoefficient = function(observations, predictions) {
       var sum = 0, sse = 0, ssyy = 0, mean = 0, length = observations.length;
@@ -279,17 +300,9 @@
             }
         };
 
-var regression = (function(method, data, order) {
-
-       if (typeof method == 'string') {
-           return methods[method](data, order);
-       }
-    });
-
-if (typeof exports !== 'undefined') {
-    module.exports = regression;
-} else {
-    ns.regression = regression;
-}
-
-}(this));
+  exports.regression = function(method, data, order) {
+    if (typeof method == 'string') {
+      return methods[method](data, order);
+    }
+  };
+});
