@@ -31,6 +31,9 @@
 })(this, function _regressionUmdFactory(exports) {
   'use strict';
 
+  // For node.js and CommonJS
+  Object.defineProperty(exports, '__esModule', { value: true });
+
   /**
    * Determine the coefficient of determination (r^2) of a fit from the observations and predictions.
    *
@@ -391,7 +394,7 @@
     },
   };
 
-  exports.regression = function regression(method, data, order) {
+  exports.default = exports.regression = function regression(method, data, order) {
     if (typeof method === 'string') {
       return methods[method.toLowerCase()](data, order);
     }
