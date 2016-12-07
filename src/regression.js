@@ -17,22 +17,15 @@
 
   // AMD
   if (typeof define === 'function' && define.amd) {
-    define('regression', ['exports'], factory);
-  } else if (typeof exports !== 'undefined') {
-    factory(exports);
+    return define('regression', factory);
+  } else if (typeof module !== 'undefined') {
+    return module.exports = factory();
   } else {
-    mod = {
-      exports: {},
-    };
-
-    factory(mod.exports);
-    global.regression = mod.exports;
+    return global.regression = factory();
   }
-})(this, function _regressionUmdFactory(exports) {
+})(this, function _regressionUmdFactory() {
   'use strict';
-
-  // For node.js and CommonJS
-  Object.defineProperty(exports, '__esModule', { value: true });
+  var exports;
 
   /**
    * Determine the coefficient of determination (r^2) of a fit from the observations and predictions.
@@ -394,10 +387,13 @@
     },
   };
 
-  exports.default = exports.regression = function regression(method, data, order) {
+  exports = function regression(method, data, order) {
     if (typeof method === 'string') {
       return methods[method.toLowerCase()](data, order);
     }
     return null;
   };
+
+  // Since we are redefining the "exports" object to a new function, we must return it here.
+  return exports;
 });
