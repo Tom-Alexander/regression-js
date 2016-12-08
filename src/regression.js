@@ -36,20 +36,21 @@
    * @return {number} - The r^2 value, or NaN if one cannot be calculated.
    */
   function determinationCoefficient(observations, predictions) {
-    var sum = observations.reduce(function (accum, observation) { return accum + observation[1]; });
+    var sum = observations.reduce(function (accum, observation) { return accum + observation[1]; }, 0);
     var mean = sum / observations.length;
 
     // Sum of squares of differences from the mean in the dependent variable
     var ssyy = observations.reduce(function (accum, observation) {
       var diff = observation[1] - mean;
       return accum + diff * diff;
-    });
+    }, 0);
 
     // Sum of squares of resudulals
     var sse = observations.reduce(function (accum, observation, ix) {
-      var resid = observation[1] - predictions[ix];
+      var prediction = predictions[ix];
+      var resid = observation[1] - prediction[1];
       return accum + resid * resid;
-    });
+    }, 0);
 
     // If ssyy is zero, r^2 is meaningless, so NaN is an appropriate answer.
     return 1 - (sse / ssyy);
@@ -341,7 +342,7 @@
 
         var answer = equation.reduce(function (sum, coeff, power) {
           return sum + coeff * Math.pow(x, power);
-        });
+        }, 0);
 
         return [x, answer];
       });
