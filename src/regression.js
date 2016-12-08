@@ -144,7 +144,21 @@
             },
 
             power: function(data) {
-                var sum = [0, 0, 0, 0], n = 0, results = [];
+                var sum = [0, 0, 0, 0], n = 0, error = false, results = [];
+
+                // Iterate array backwards in case of element removal
+                for(var i = data.length; i--;) {
+                    // Remove origin from array if present
+                    if(data[i] === [0,0]) {
+                        data.splice(i, 1);
+                    }
+                    // Otherwise if any value = 0, can't compute power law regression directly
+                    else if (data[i][0] === 0 || data[i][1] === 0) {
+                        error = true;
+                        break;
+                    }
+                }
+                if (error) return { equation: [null, null], points: null, string: "Error: Found Zero Value"}
 
                 for (len = data.length; n < len; n++) {
                   if (data[n][1] != null) {
