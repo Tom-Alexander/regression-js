@@ -152,13 +152,13 @@
                     if(data[i] === [0,0]) {
                         data.splice(i, 1);
                     }
-                    // If any x value = 0, can't compute power law regression directly
-                    else if (data[i][0] === 0) {
+                    // Otherwise if any value = 0, can't compute power law regression directly
+                    else if (data[i][0] === 0 || data[i][1] === 0) {
                         error = true;
                         break;
                     }
                 }
-                if (error) return { equation: [null, null], points: null, string: "Error: Found x=0"}
+                if (error) return { equation: [null, null], points: null, string: "Error: Found Zero Value"}
 
                 for (len = data.length; n < len; n++) {
                   if (data[n][1] != null) {
