@@ -12,17 +12,17 @@
 
 /* global define */
 (function _umd(global, factory) {
+  var returned;
   // UMD Format for exports. Works with all module systems: AMD/RequireJS, CommonJS, and global
-  var mod;
-
   // AMD
   if (typeof define === 'function' && define.amd) {
-    return define('regression', factory);
+    returned = define('regression', factory);
   } else if (typeof module !== 'undefined') {
-    return module.exports = factory();
+    returned = module.exports = factory();
   } else {
-    return global.regression = factory();
+    returned = global.regression = factory();
   }
+  return returned;
 })(this, function _regressionUmdFactory() {
   'use strict';
   var exports;

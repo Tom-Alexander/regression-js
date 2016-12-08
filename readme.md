@@ -13,7 +13,7 @@ All models will return an object with the following properties:
 Linear regression
 -----------------
 
-equation: ```[gradient, y-intercept]``` in the form y = mx + c
+equation: `[gradient, y-intercept]` in the form y = mx + c
 ```
 var data = [[0,1],[32, 67] .... [12, 79]];
 var result = regression('linear', data);
@@ -24,7 +24,7 @@ var yIntercept = result.equation[1];
 Linear regression through the origin
 -----------------
 
-equation: ```[gradient]``` in the form y = mx
+equation: `[gradient]` in the form y = mx
 ```
 var data = [[0,1],[32, 67] .... [12, 79]];
 var result = regression('linearThroughOrigin', data);
@@ -33,22 +33,22 @@ var result = regression('linearThroughOrigin', data);
 Exponential regression
 ----------------------
 
-equation: ```[a, b]``` in the form y = ae^bx
+equation: `[a, b]` in the form y = ae^bx
 
 Logarithmic regression
 ----------------------
 
-equation: ```[a, b]``` in the form y = a + b ln x
+equation: `[a, b]` in the form y = a + b ln x
 
 Power law regression
 --------------------
 
-equation: ```[a, b]``` in the form y = ax^b
+equation: `[a, b]` in the form y = ax^b
 
 Polynomial regression
 ---------------------
 
-equation: ```[a0, .... , an]``` in the form a0x^0 ... + anx^n
+equation: `[a0, .... , an]` in the form a0x^0 ... + anx^n
 ```
 var data = [[0,1],[32, 67] .... [12, 79]];
 var result = regression('polynomial', data, 4);
@@ -59,13 +59,24 @@ Lastvalue
 
 Not exactly a regression. Uses the last value to fill the blanks when forecasting.
 
-
-
 Filling the blanks and forecasting
----------
+----------------------------------
 
 ```
 var data = [[0,1], [32, null] .... [12, 79]];
 ```
 
-If you use a ```null``` value for data, regression-js will fill it using the trend.
+In any regression, if you use a `null` value for data, regression-js will fill it using the trend.
+
+Development
+===========
+
+Install packages: `npm install`
+
+The project is built and controled with [grunt](http://gruntjs.com).
+
+To prepare for release, run the default task, which:
+- Lints the source and tests with ESLint
+- Uglifies the javascript in to the `build/` directory
+
+To run tests, `grunt test`.
