@@ -106,12 +106,16 @@
     return coefficients;
   }
 
+  /** Precision to use when displaying string form of equation */
+  var _DEFAULT_PRECISION = 2;
+
   /**
    * Round a number to a precision, specificed in number of decimal places
    *
    * @param {number} number - The number to round
    * @param {number} precision - The number of decimal places to round to:
    *                             > 0 means decimals, < 0 means powers of 10
+   *
    *
    * @return {numbr} - The number, rounded
    */
@@ -120,16 +124,13 @@
     return Math.round(number * factor) / factor;
   }
 
-  /** Precision to use when displaying string form of equation */
-  var PREC = 2;
-
   /**
    * The set of all fitting methods
    *
    * @namespace
    */
   var methods = {
-    linear: function (data) {
+    linear: function (data, _order, options) {
       var sum = [0, 0, 0, 0, 0];
       var results;
       var gradient;
@@ -158,11 +159,11 @@
         r2: determinationCoefficient(data, results),
         equation: [gradient, intercept],
         points: results,
-        string: 'y = ' + _round(gradient, PREC) + 'x + ' + _round(intercept, PREC),
+        string: 'y = ' + _round(gradient, options.precision) + 'x + ' + _round(intercept, options.precision),
       };
     },
 
-    linearthroughorigin: function (data) {
+    linearthroughorigin: function (data, _order, options) {
       var sum = [0, 0];
       var gradient;
       var results;
@@ -185,11 +186,11 @@
         r2: determinationCoefficient(data, results),
         equation: [gradient],
         points: results,
-        string: 'y = ' + _round(gradient, PREC) + 'x',
+        string: 'y = ' + _round(gradient, options.precision) + 'x',
       };
     },
 
-    exponential: function (data) {
+    exponential: function (data, _order, options) {
       var sum = [0, 0, 0, 0, 0, 0];
       var denominator;
       var coeffA;
@@ -220,11 +221,11 @@
         r2: determinationCoefficient(data, results),
         equation: [coeffA, coeffB],
         points: results,
-        string: 'y = ' + _round(coeffA, PREC) + 'e^(' + _round(coeffB, PREC) + 'x)',
+        string: 'y = ' + _round(coeffA, options.precision) + 'e^(' + _round(coeffB, options.precision) + 'x)',
       };
     },
 
-    logarithmic: function (data) {
+    logarithmic: function (data, _order, options) {
       var sum = [0, 0, 0, 0];
       var coeffA;
       var coeffB;
@@ -252,11 +253,11 @@
         r2: determinationCoefficient(data, results),
         equation: [coeffA, coeffB],
         points: results,
-        string: 'y = ' + _round(coeffA, PREC) + ' + ' + _round(coeffB, PREC) + ' ln(x)',
+        string: 'y = ' + _round(coeffA, options.precision) + ' + ' + _round(coeffB, options.precision) + ' ln(x)',
       };
     },
 
-    power: function (data) {
+    power: function (data, _order, options) {
       var sum = [0, 0, 0, 0];
       var coeffA;
       var coeffB;
@@ -284,11 +285,11 @@
         r2: determinationCoefficient(data, results),
         equation: [coeffA, coeffB],
         points: results,
-        string: 'y = ' + _round(coeffA, PREC) + 'x^' + _round(coeffB, PREC),
+        string: 'y = ' + _round(coeffA, options.precision) + 'x^' + _round(coeffB, options.precision),
       };
     },
 
-    polynomial: function (data, order) {
+    polynomial: function (data, order, options) {
       var lhs = [];
       var rhs = [];
       var a = 0;
@@ -350,11 +351,11 @@
       string = 'y = ';
       for (i = equation.length - 1; i >= 0; i--) {
         if (i > 1) {
-          string += _round(equation[i], PREC)  + 'x^' + i + ' + ';
+          string += _round(equation[i], options.precision)  + 'x^' + i + ' + ';
         } else if (i === 1) {
-          string += _round(equation[i], PREC) + 'x' + ' + ';
+          string += _round(equation[i], options.precision) + 'x' + ' + ';
         } else {
-          string += _round(equation[i], PREC);
+          string += _round(equation[i], options.precision);
         }
       }
 
@@ -366,7 +367,7 @@
       };
     },
 
-    lastvalue: function (data) {
+    lastvalue: function (data, _order, options) {
       var results = [];
       var lastvalue = null;
 
@@ -383,14 +384,24 @@
         r2: determinationCoefficient(data, results),
         equation: [lastvalue],
         points: results,
-        string: '' + lastvalue,
+        string: '' + _round(lastvalue, options.precision),
       };
     },
   };
 
-  exports = function regression(method, data, order) {
+  exports = function regression(method, data, order, options) {
+    var methodOptions = (
+      ((typeof order === 'object') && (typeof options === 'undefined'))
+        ? order
+        : options || {}
+    );
+
+    if (!methodOptions.precision) {
+      methodOptions.precision = _DEFAULT_PRECISION;
+    }
+
     if (typeof method === 'string') {
-      return methods[method.toLowerCase()](data, order);
+      return methods[method.toLowerCase()](data, order, methodOptions);
     }
     return null;
   };
