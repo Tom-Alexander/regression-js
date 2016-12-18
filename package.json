@@ -15,8 +15,15 @@
     "modelling",
     "analysis"
   ],
+  "scripts": {
+    "test": "grunt test",
+    "build": "grunt"
+  },
   "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.12.2",
     "eslint-config-airbnb-es5": "^1.1.0",
+    "eslint-plugin-react": "^6.8.0",
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-eslint": "^19.0.0",
