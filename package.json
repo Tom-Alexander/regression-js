@@ -1,19 +1,33 @@
 {
   "name": "regression",
-  "description" : "Javascript least squares data fitting methods",
-  "author" : "Tom Alexander <me@tomalexander.co.nz>",
-  "version": "1.2.1",
-  "license" : "MIT",
-  "repository": "Tom-Alexander/regression-js",
-  "keywords" : [
-        "regression",
-        "data",
-        "fitting",
-        "modelling",
-        "analysis"
+  "description": "Javascript least squares data fitting methods",
+  "contributors": [
+    "Tom Alexander <me@tomalexander.co.nz>",
+    "Misha Wolfson <misha@ginkgobioworks.com>"
   ],
+  "version": "1.2.1",
+  "license": "MIT",
+  "repository": "Tom-Alexander/regression-js",
+  "keywords": [
+    "regression",
+    "data",
+    "fitting",
+    "modelling",
+    "analysis"
+  ],
+  "scripts": {
+    "test": "grunt test",
+    "build": "grunt"
+  },
   "devDependencies": {
-	  "grunt": "~0.4.1",
-	  "grunt-contrib-uglify": "~0.2.2"
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb-es5": "^1.1.0",
+    "eslint-plugin-react": "^6.8.0",
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-eslint": "^19.0.0",
+    "grunt-mocha-test": "^0.13.2",
+    "mocha": "^3.2.0"
   }
 }
