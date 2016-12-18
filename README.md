@@ -5,7 +5,6 @@ _regression.js_ is a JavaScript library containing a collection of least-squares
 finding a trend in a set of data. It currently contains methods for linear, exponential,
 logarithmic, power and polynomial trends.
 
-
 Installation
 ============
 
@@ -44,7 +43,7 @@ var yIntercept = result.equation[1];
 Linear regression through the origin
 -----------------
 
-equation: `[gradient]` in the form [!y = mx](http://mathurl.com/h5m4qgd.png)
+equation: `[gradient]` in the form ![y = mx](http://mathurl.com/h5m4qgd.png)
 
 ```javascript
 var data = [[0,1],[32, 67] .... [12, 79]];
@@ -54,22 +53,22 @@ var result = regression('linearThroughOrigin', data);
 Exponential regression
 ----------------------
 
-equation: `[a, b]` in the form [!y = ae^bx](http://mathurl.com/zuys53z.png)
+equation: `[a, b]` in the form ![y = ae^bx](http://mathurl.com/zuys53z.png)
 
 Logarithmic regression
 ----------------------
 
-equation: `[a, b]` in the form [!y = a + b ln x](http://mathurl.com/zye394m.png)
+equation: `[a, b]` in the form ![y = a + b ln x](http://mathurl.com/zye394m.png)
 
 Power law regression
 --------------------
 
-equation: `[a, b]` in the form [!y = ax^b](http://mathurl.com/gojkazs.png)
+equation: `[a, b]` in the form ![y = ax^b](http://mathurl.com/gojkazs.png)
 
 Polynomial regression
 ---------------------
 
-equation: `[a0, ... , an]` in the form [!anx^n ... + a1x + a0](http://mathurl.com/hxz543o.png)
+equation: `[a0, ... , an]` in the form ![anx^n ... + a1x + a0](http://mathurl.com/hxz543o.png)
 
 ```javascript
 var data = [[0,1],[32, 67] .... [12, 79]];
@@ -95,10 +94,10 @@ Development
 
 Install packages: `npm install`
 
-The project is built and controled with [grunt](http://gruntjs.com).
+The project is built and controlled with [grunt](http://gruntjs.com).
 
 To prepare for release, run the default task, which:
 - Lints the source and tests with ESLint
-- Uglifies the javascript in to the `build/` directory
+- Minifies the javascript in to the `build/` directory
 
 To run tests, `grunt test`.
