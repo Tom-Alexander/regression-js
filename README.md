@@ -1,6 +1,8 @@
 regression.js
 =============
 
+[![Build Status](https://travis-ci.org/Tom-Alexander/regression-js.svg?branch=master)](https://travis-ci.org/Tom-Alexander/regression-js)
+
 _regression.js_ is a JavaScript library containing a collection of least-squares fitting methods for
 finding a trend in a set of data. It currently contains methods for linear, exponential,
 logarithmic, power and polynomial trends.
