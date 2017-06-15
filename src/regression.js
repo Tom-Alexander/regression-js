@@ -132,6 +132,7 @@
   var methods = {
     linear: function (data, _order, options) {
       var sum = [0, 0, 0, 0, 0];
+      var fit;
       var results;
       var gradient;
       var intercept;
@@ -150,14 +151,19 @@
       gradient = (len * sum[3] - sum[0] * sum[1]) / (len  * sum[2] - sum[0] * sum[0]);
       intercept = (sum[1] / len) - (gradient * sum[0]) / len;
 
+      fit = function (x) {
+        return [x, gradient * x + intercept];
+      };
+
       results = data.map(function (xyPair) {
         var x = xyPair[0];
-        return [x, gradient * x + intercept];
+        return fit(x);
       });
 
       return {
         r2: determinationCoefficient(data, results),
         equation: [gradient, intercept],
+        predict: fit,
         points: results,
         string: 'y = ' + _round(gradient, options.precision) + 'x + ' + _round(intercept, options.precision),
       };
@@ -166,6 +172,7 @@
     linearthroughorigin: function (data, _order, options) {
       var sum = [0, 0];
       var gradient;
+      var fit;
       var results;
 
       for (var n = 0; n < data.length; n++) {
@@ -177,14 +184,19 @@
 
       gradient = sum[1] / sum[0];
 
+      fit = function (x) {
+        return [x, gradient * x];
+      };
+
       results = data.map(function (xyPair) {
         var x = xyPair[0];
-        return [x, gradient * x];
+        return fit(x);
       });
 
       return {
         r2: determinationCoefficient(data, results),
         equation: [gradient],
+        predict: fit,
         points: results,
         string: 'y = ' + _round(gradient, options.precision) + 'x',
       };
@@ -195,6 +207,7 @@
       var denominator;
       var coeffA;
       var coeffB;
+      var fit;
       var results;
 
       for (var n = 0; n < data.length; n++) {
@@ -212,14 +225,19 @@
       coeffA = Math.exp((sum[2] * sum[3] - sum[5] * sum[4]) / denominator);
       coeffB = (sum[1] * sum[4] - sum[5] * sum[3]) / denominator;
 
+      fit = function (x) {
+        return [x, coeffA * Math.exp(coeffB * x)];
+      };
+
       results = data.map(function (xyPair) {
         var x = xyPair[0];
-        return [x, coeffA * Math.exp(coeffB * x)];
+        return fit(x);
       });
 
       return {
         r2: determinationCoefficient(data, results),
         equation: [coeffA, coeffB],
+        predict: fit,
         points: results,
         string: 'y = ' + _round(coeffA, options.precision) + 'e^(' + _round(coeffB, options.precision) + 'x)',
       };
@@ -229,6 +247,7 @@
       var sum = [0, 0, 0, 0];
       var coeffA;
       var coeffB;
+      var fit;
       var results;
       var len = data.length;
 
@@ -244,14 +263,19 @@
       coeffB = (len * sum[1] - sum[2] * sum[0]) / (len * sum[3] - sum[0] * sum[0]);
       coeffA = (sum[2] - coeffB * sum[0]) / len;
 
+      fit = function (x) {
+        return [x, coeffA + coeffB * Math.log(x)];
+      };
+
       results = data.map(function (xyPair) {
         var x = xyPair[0];
-        return [x, coeffA + coeffB * Math.log(x)];
+        return fit(x);
       });
 
       return {
         r2: determinationCoefficient(data, results),
         equation: [coeffA, coeffB],
+        predict: fit,
         points: results,
         string: 'y = ' + _round(coeffA, options.precision) + ' + ' + _round(coeffB, options.precision) + ' ln(x)',
       };
@@ -261,6 +285,7 @@
       var sum = [0, 0, 0, 0];
       var coeffA;
       var coeffB;
+      var fit;
       var results;
       var len = data.length;
 
@@ -276,14 +301,19 @@
       coeffB = (len * sum[1] - sum[2] * sum[0]) / (len * sum[3] - sum[0] * sum[0]);
       coeffA = Math.exp((sum[2] - coeffB * sum[0]) / len);
 
+      fit = function (x) {
+        return [x, coeffA * Math.pow(x, coeffB)];
+      };
+
       results = data.map(function (xyPair) {
         var x = xyPair[0];
-        return [x, coeffA * Math.pow(x, coeffB)];
+        return fit(x);
       });
 
       return {
         r2: determinationCoefficient(data, results),
         equation: [coeffA, coeffB],
+        predict: fit,
         points: results,
         string: 'y = ' + _round(coeffA, options.precision) + 'x^' + _round(coeffB, options.precision),
       };
@@ -302,6 +332,7 @@
       var l;
       var len = data.length;
 
+      var fit;
       var results;
       var equation;
       var string;
@@ -338,14 +369,17 @@
 
       equation = gaussianElimination(rhs, k);
 
-      results = data.map(function (xyPair) {
-        var x = xyPair[0];
-
+      fit = function (x) {
         var answer = equation.reduce(function (sum, coeff, power) {
           return sum + coeff * Math.pow(x, power);
         }, 0);
 
         return [x, answer];
+      };
+
+      results = data.map(function (xyPair) {
+        var x = xyPair[0];
+        return fit(x);
       });
 
       string = 'y = ';
@@ -362,6 +396,7 @@
       return {
         r2: determinationCoefficient(data, results),
         equation: equation,
+        predict: fit,
         points: results,
         string: string,
       };
