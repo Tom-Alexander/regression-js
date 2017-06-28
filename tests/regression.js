@@ -6,6 +6,7 @@ var regression = require('..');
 describe('regression', function () {
   var example = {
     diagLine: [[10, 20], [100, 200], [1000, 2000], [10000, 20000]],
+    nullDataDiagLine: [[10, 20], [100, null], [1000, 2000], [10000, null]],
     thirdSlopeLine: [[3, 2], [6, 3]],
     hline: [[10, 20], [20, 20]],
     negdiagline: [[10, -20], [100, -200], [1000, -2000], [10000, -20000]],
@@ -27,6 +28,14 @@ describe('regression', function () {
 
     it('should fit perfectly linear data correctly', function () {
       expect(linear(example.diagLine)).to.deep.equal({
+        r2: 1,
+        equation: [2, 0],
+        points: example.diagLine,
+        string: 'y = 2x + 0',
+      });
+    });
+    it('should predict fit for missing linear data correctly', function () {
+      expect(linear(example.nullDataDiagLine)).to.deep.equal({
         r2: 1,
         equation: [2, 0],
         points: example.diagLine,

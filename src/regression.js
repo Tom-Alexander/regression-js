@@ -30,12 +30,26 @@
   /**
    * Determine the coefficient of determination (r^2) of a fit from the observations and predictions.
    *
+   * @param {Array<Array<number>>} data - Pairs of observed x-y values, including nulls
+   * @param {Array<Array<number>>} results - Pairs of observed predicted x-y values, including null predictions
+   *
    * @param {Array<Array<number>>} observations - Pairs of observed x-y values
    * @param {Array<Array<number>>} predictions - Pairs of observed predicted x-y values
    *
    * @return {number} - The r^2 value, or NaN if one cannot be calculated.
    */
-  function determinationCoefficient(observations, predictions) {
+  function determinationCoefficient(data, results) {
+    var observations = [];
+    var predictions = [];
+
+    // Remove predictive points for accurate fit
+    data.forEach( function (d, i) {
+      if (d[1] !== null) {
+        observations.push(d);
+        predictions.push(results[i]);
+      }
+    });
+
     var sum = observations.reduce(function (accum, observation) { return accum + observation[1]; }, 0);
     var mean = sum / observations.length;
 
@@ -136,6 +150,8 @@
       var gradient;
       var intercept;
       var len = data.length;
+      var nonNullLen = 0; // the number of non-null points
+
 
       for (var n = 0; n < len; n++) {
         if (data[n][1] !== null) {
@@ -144,11 +160,12 @@
           sum[2] += data[n][0] * data[n][0];
           sum[3] += data[n][0] * data[n][1];
           sum[4] += data[n][1] * data[n][1];
+          nonNullLen++;
         }
       }
 
-      gradient = (len * sum[3] - sum[0] * sum[1]) / (len  * sum[2] - sum[0] * sum[0]);
-      intercept = (sum[1] / len) - (gradient * sum[0]) / len;
+      gradient = (nonNullLen * sum[3] - sum[0] * sum[1]) / (nonNullLen  * sum[2] - sum[0] * sum[0]);
+      intercept = (sum[1] / nonNullLen) - (gradient * sum[0]) / nonNullLen;
 
       results = data.map(function (xyPair) {
         var x = xyPair[0];
