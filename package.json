@@ -19,7 +19,7 @@
   "scripts": {
     "clean": "rm -rf dist && mkdir dist",
     "lint": "./node_modules/.bin/eslint src/** tests/**",
-    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register",
+    "test": "npm run lint && ./node_modules/.bin/mocha --compilers js:babel-core/register",
     "build": "npm run clean && npm run build-regression-js && npm run build-regression-min-js",
     "build-regression-js": "./node_modules/.bin/babel src/regression.js --out-file dist/regression.js",
     "build-regression-min-js": "BABEL_ENV=production ./node_modules/.bin/babel src/regression.js --out-file dist/regression.min.js"
