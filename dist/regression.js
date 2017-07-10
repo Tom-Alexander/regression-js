@@ -25,6 +25,18 @@
     return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
   };
 
+  function _toConsumableArray(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  }
+
   var DEFAULT_PRECISION = 2;
 
   /**
@@ -159,15 +171,19 @@
       var gradient = run === 0 ? 0 : round(rise / run, options.precision);
       var intercept = round(sum[1] / len - gradient * sum[0] / len, options.precision);
 
-      var results = data.map(function (xyPair) {
-        var x = xyPair[0];
+      var predict = function predict(x) {
         return [round(x, options.precision), round(gradient * x + intercept, options.precision)];
+      };
+
+      var points = data.map(function (point) {
+        return predict(point[0]);
       });
 
       return {
-        points: results,
+        points: points,
+        predict: predict,
         equation: [gradient, intercept],
-        r2: round(determinationCoefficient(data, results), options.precision),
+        r2: round(determinationCoefficient(data, points), options.precision),
         string: intercept === 0 ? 'y = ' + gradient + 'x' : 'y = ' + gradient + 'x + ' + intercept
       };
     },
@@ -190,17 +206,20 @@
       var b = (sum[1] * sum[4] - sum[5] * sum[3]) / denominator;
       var coeffA = round(a, options.precision);
       var coeffB = round(b, options.precision);
-
-      var results = data.map(function (xyPair) {
-        var x = xyPair[0];
+      var predict = function predict(x) {
         return [round(x, options.precision), round(coeffA * Math.exp(coeffB * x), options.precision)];
+      };
+
+      var points = data.map(function (point) {
+        return predict(point[0]);
       });
 
       return {
-        points: results,
+        points: points,
+        predict: predict,
         equation: [coeffA, coeffB],
         string: 'y = ' + coeffA + 'e^(' + coeffB + 'x)',
-        r2: round(determinationCoefficient(data, results), options.precision)
+        r2: round(determinationCoefficient(data, points), options.precision)
       };
     },
     logarithmic: function logarithmic(data, _order, options) {
@@ -220,17 +239,20 @@
       var coeffB = round(a, options.precision);
       var coeffA = round((sum[2] - coeffB * sum[0]) / len, options.precision);
 
-      var results = data.map(function (xyPair) {
-        var x = xyPair[0];
-        var y = coeffA + coeffB * Math.log(x);
-        return [round(x, options.precision), round(y, options.precision)];
+      var predict = function predict(x) {
+        return [round(x, options.precision), round(round(coeffA + coeffB * Math.log(x), options.precision), options.precision)];
+      };
+
+      var points = data.map(function (point) {
+        return predict(point[0]);
       });
 
       return {
-        points: results,
+        points: points,
+        predict: predict,
         equation: [coeffA, coeffB],
         string: 'y = ' + coeffA + ' + ' + coeffB + ' ln(x)',
-        r2: round(determinationCoefficient(data, results), options.precision)
+        r2: round(determinationCoefficient(data, points), options.precision)
       };
     },
     power: function power(data, _order, options) {
@@ -251,16 +273,20 @@
       var coeffA = round(Math.exp(a), options.precision);
       var coeffB = round(b, options.precision);
 
-      var results = data.map(function (xyPair) {
-        var x = xyPair[0];
-        return [round(x, options.precision), round(coeffA * x ** coeffB, options.precision)];
+      var predict = function predict(x) {
+        return [round(x, options.precision), round(round(coeffA * x ** coeffB, options.precision), options.precision)];
+      };
+
+      var points = data.map(function (point) {
+        return predict(point[0]);
       });
 
       return {
-        points: results,
+        points: points,
+        predict: predict,
         equation: [coeffA, coeffB],
         string: 'y = ' + coeffA + 'x^' + coeffB,
-        r2: round(determinationCoefficient(data, results), options.precision)
+        r2: round(determinationCoefficient(data, points), options.precision)
       };
     },
     polynomial: function polynomial(data, order, options) {
@@ -310,12 +336,14 @@
         return round(v, options.precision);
       });
 
-      var results = data.map(function (xyPair) {
-        var x = xyPair[0];
-        var answer = coefficients.reduce(function (sum, coeff, power) {
+      var predict = function predict(x) {
+        return [round(x, options.precision), round(coefficients.reduce(function (sum, coeff, power) {
           return sum + coeff * x ** power;
-        }, 0);
-        return [round(x, options.precision), round(answer, options.precision)];
+        }, 0), options.precision)];
+      };
+
+      var points = data.map(function (point) {
+        return predict(point[0]);
       });
 
       var string = 'y = ';
@@ -331,9 +359,10 @@
 
       return {
         string: string,
-        points: results,
-        equation: coefficients.reverse(),
-        r2: round(determinationCoefficient(data, results), options.precision)
+        points: points,
+        predict: predict,
+        equation: [].concat(_toConsumableArray(coefficients)).reverse(),
+        r2: round(determinationCoefficient(data, points), options.precision)
       };
     }
   };

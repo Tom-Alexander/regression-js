@@ -17,7 +17,9 @@ describe('models', () => {
         const example = models[model][name];
         describe(name, () => {
           it(`correctly predicts ${name}`, () => {
-            expect(regression(model, example.data, example.order)).to.deep.equal({
+            let result = regression(model, example.data, example.order);
+            delete result.predict;
+            expect(result).to.deep.equal({
               r2: example.r2,
               string: example.string,
               points: example.points,
@@ -25,10 +27,9 @@ describe('models', () => {
             });
           });
 
-          it(`should ignore model name case`, () => {
-            const lowercase = regression(model, example.data, example.order);
-            const uppercase = regression(model.toUpperCase(), example.data, example.order);
-            expect(lowercase).to.deep.equal(uppercase);
+          it('should correctly forecast data points', () => {
+            const result = regression(model, example.data, example.order);
+            expect(result.predict(example.predicted[0])).to.deep.equal(example.predicted);
           });
 
           it('should take precision options', () => {
