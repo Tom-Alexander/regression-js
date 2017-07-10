@@ -31,12 +31,22 @@
   * Determine the coefficient of determination (r^2) of a fit from the observations
   * and predictions.
   *
-  * @param {Array<Array<number>>} observations - Pairs of observed x-y values
-  * @param {Array<Array<number>>} predictions - Pairs of observed predicted x-y values
+  * @param {Array<Array<number>>} data - Pairs of observed x-y values
+  * @param {Array<Array<number>>} results - Pairs of observed predicted x-y values
   *
   * @return {number} - The r^2 value, or NaN if one cannot be calculated.
   */
-  function determinationCoefficient(observations, predictions) {
+  function determinationCoefficient(data, results) {
+    var predictions = [];
+    var observations = [];
+
+    data.forEach(function (d, i) {
+      if (d[1] !== null) {
+        observations.push(d);
+        predictions.push(results[i]);
+      }
+    });
+
     var sum = observations.reduce(function (a, observation) {
       return a + observation[1];
     }, 0);
@@ -131,10 +141,11 @@
   var methods = {
     linear: function linear(data, _order, options) {
       var sum = [0, 0, 0, 0, 0];
-      var len = data.length;
+      var len = 0;
 
-      for (var n = 0; n < len; n++) {
+      for (var n = 0; n < data.length; n++) {
         if (data[n][1] !== null) {
+          len++;
           sum[0] += data[n][0];
           sum[1] += data[n][1];
           sum[2] += data[n][0] * data[n][0];

@@ -4,12 +4,22 @@ const DEFAULT_PRECISION = 2;
 * Determine the coefficient of determination (r^2) of a fit from the observations
 * and predictions.
 *
-* @param {Array<Array<number>>} observations - Pairs of observed x-y values
-* @param {Array<Array<number>>} predictions - Pairs of observed predicted x-y values
+* @param {Array<Array<number>>} data - Pairs of observed x-y values
+* @param {Array<Array<number>>} results - Pairs of observed predicted x-y values
 *
 * @return {number} - The r^2 value, or NaN if one cannot be calculated.
 */
-function determinationCoefficient(observations, predictions) {
+function determinationCoefficient(data, results) {
+  const predictions = [];
+  const observations = [];
+
+  data.forEach((d, i) => {
+    if (d[1] !== null) {
+      observations.push(d);
+      predictions.push(results[i]);
+    }
+  });
+
   const sum = observations.reduce((a, observation) => a + observation[1], 0);
   const mean = sum / observations.length;
 
@@ -102,10 +112,11 @@ export function round(number, precision) {
 const methods = {
   linear(data, _order, options) {
     const sum = [0, 0, 0, 0, 0];
-    const len = data.length;
+    let len = 0;
 
-    for (let n = 0; n < len; n++) {
+    for (let n = 0; n < data.length; n++) {
       if (data[n][1] !== null) {
+        len++;
         sum[0] += data[n][0];
         sum[1] += data[n][1];
         sum[2] += data[n][0] * data[n][0];
