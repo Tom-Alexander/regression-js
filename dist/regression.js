@@ -156,32 +156,8 @@
       return {
         points: results,
         equation: [gradient, intercept],
-        string: 'y = ' + gradient + 'x + ' + intercept,
-        r2: round(determinationCoefficient(data, results), options.precision)
-      };
-    },
-    linearthroughorigin: function linearthroughorigin(data, _order, options) {
-      var sum = [0, 0];
-
-      for (var n = 0; n < data.length; n++) {
-        if (data[n][1] !== null) {
-          sum[0] += data[n][0] * data[n][0];
-          sum[1] += data[n][0] * data[n][1];
-        }
-      }
-
-      var gradient = round(sum[1] / sum[0], options.precision);
-
-      var results = data.map(function (xyPair) {
-        var x = xyPair[0];
-        return [round(x, options.precision), round(gradient * x, options.precision)];
-      });
-
-      return {
-        points: results,
-        equation: [gradient],
-        string: 'y = ' + gradient + 'x',
-        r2: round(determinationCoefficient(data, results), options.precision)
+        r2: round(determinationCoefficient(data, results), options.precision),
+        string: intercept === 0 ? 'y = ' + gradient + 'x' : 'y = ' + gradient + 'x + ' + intercept
       };
     },
     exponential: function exponential(data, _order, options) {
@@ -347,26 +323,6 @@
         points: results,
         equation: coefficients.reverse(),
         r2: round(determinationCoefficient(data, results), options.precision)
-      };
-    },
-    lastvalue: function lastvalue(data, _order, options) {
-      var results = [];
-      var lastvalue = null;
-
-      for (var i = 0; i < data.length; i++) {
-        if (data[i][1] !== null && isFinite(data[i][1])) {
-          lastvalue = data[i][1];
-          results.push([data[i][0], data[i][1]]);
-        } else {
-          results.push([data[i][0], lastvalue]);
-        }
-      }
-
-      return {
-        points: results,
-        equation: [lastvalue],
-        r2: determinationCoefficient(data, results),
-        string: '' + round(lastvalue, options.precision)
       };
     }
   };
