@@ -1,105 +1,70 @@
-regression.js
-=============
 
-[![Build Status](https://travis-ci.org/Tom-Alexander/regression-js.svg?branch=master)](https://travis-ci.org/Tom-Alexander/regression-js)
+<div align="center">
+<h1>regression-js</h1>
+<a href="https://travis-ci.org/Tom-Alexander/regression-js">
+<img src="https://travis-ci.org/Tom-Alexander/regression-js.svg?branch=master"/>
+</a>
+<a>
+<img src="https://badge.fury.io/js/regression.svg" alt="npm version" />
+</a>
+<a href='https://coveralls.io/github/Tom-Alexander/regression-js?branch=master'><img src='https://coveralls.io/repos/github/Tom-Alexander/regression-js/badge.svg?branch=master' alt='Coverage Status' /></a>
+<br/>
+<br/>
+<p>
+regression-js is a JavaScript module containing a collection of least-squares fitting methods for simple data analysis.
+</p>
+</div>
 
-_regression.js_ is a JavaScript library containing a collection of least-squares fitting methods for
-finding a trend in a set of data. It currently contains methods for linear, exponential,
-logarithmic, power and polynomial trends.
+## Installation
+This module works on node and in the browser. It is available as the 'regression' package on (npm)[https://www.npmjs.com/package/regression]. It is also available on a (CDN)[https://cdnjs.com/libraries/regression].
 
-Installation
-============
+### npm
 
-The library can be installed from both `bower` and `npm`.
+```
+npm install --save regression
+```
 
-Usage
-=====
+## Usage
 
-Most regressions require only two parameters - the regression method (linear, exponential,
-logarithmic, power or polynomial) and a data source. A third parameter can be used to define the
-degree of a polynomial when a polynomial regression is required. The regression method name is
-case-insensitive.
+```javascript
+import regression from 'regression';
+const result regression.linear([0, 1], [32, 67], [12, 79]);
+const gradient = result.equation[0];
+const yIntercept result.equation[1];
+```
 
-All models return an object with the following properties:
+Data is passed into the model as a 2D array. A second parameter can be used to configure the model. The configuration parameter is optional. `null` values are ignored. The precision option will set the number of significant figures the output is rounded to.
+
+### Configuration options
+Below are the default values for the configuration parameter.
+```javascript
+{
+  order: 2,
+  precision: 2,
+  period: null,
+}
+```
+
+### Properties
 - `equation`: an array containing the coefficients of the equation
 - `string`: A string representation of the equation
-- `points`: an array containing the predicted data
+- `points`: an array containing the predicted data in the domain of the input
 - `r2`: the coefficient of determination (<i>R</i><sup>2</sup>)
+- `predict(x)`: This function will return the predicted value
 
+## API
 
-Regression Types
-================
+### `regression.linear(data, ?options)`
+Fits the input data to a straight line with the equation `y = mx + c`. It returns the coefficients in the form `[m, c]`.
+### `regression.exponential(data, ?options)`
+### `regression.logarithmic(data, ?options)`
+### `regression.power(data, ?options)`
+### `regression.polynomial(data, ?options)`
+### `regression.sinusoidal(data, ?options)`
+### `regression.gaussian(data, ?options)`
 
-Linear regression
------------------
+## Development
 
-equation: `[gradient, y-intercept]` in the form y = mx + c
-
-```javascript
-var data = [[0,1],[32, 67] .... [12, 79]];
-var result = regression('linear', data);
-var slope = result.equation[0];
-var yIntercept = result.equation[1];
-```
-
-Linear regression through the origin
------------------
-
-equation: `[gradient]` in the form ![y = mx](http://mathurl.com/h5m4qgd.png)
-
-```javascript
-var data = [[0,1],[32, 67] .... [12, 79]];
-var result = regression('linearThroughOrigin', data);
-```
-
-Exponential regression
-----------------------
-
-equation: `[a, b]` in the form ![y = ae^bx](http://mathurl.com/zuys53z.png)
-
-Logarithmic regression
-----------------------
-
-equation: `[a, b]` in the form ![y = a + b ln x](http://mathurl.com/zye394m.png)
-
-Power law regression
---------------------
-
-equation: `[a, b]` in the form ![y = ax^b](http://mathurl.com/gojkazs.png)
-
-Polynomial regression
----------------------
-
-equation: `[a0, ... , an]` in the form ![anx^n ... + a1x + a0](http://mathurl.com/hxz543o.png)
-
-```javascript
-var data = [[0,1],[32, 67] .... [12, 79]];
-var result = regression('polynomial', data, 4);
-```
-
-Lastvalue
----------
-
-Not exactly a regression. Uses the last value to fill the blanks when forecasting.
-
-Filling the blanks and forecasting
-----------------------------------
-
-```javascript
-var data = [[0,1], [32, null] .... [12, 79]];
-```
-
-In any regression, if you use a `null` value for data, regression-js will fill it using the trend.
-
-Development
-===========
-
-Install packages: `npm install`
-
-The project is built and controlled with [grunt](http://gruntjs.com).
-
-To prepare for release, run the default task, which:
-- Lints the source and tests with ESLint
-- Minifies the javascript in to the `build/` directory
-
-To run tests, `grunt test`.
+- Install the dependencies with `npm install`
+- To build the assets in the `dist` directory, use `npm run build`
+- You can run the tests with: `npm run test`.
