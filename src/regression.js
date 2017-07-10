@@ -1,4 +1,4 @@
-const DEFAULT_OPTIONS = { order: 2, precision: 2 };
+const DEFAULT_OPTIONS = { order: 2, precision: 2, period: null };
 
 /**
 * Determine the coefficient of determination (r^2) of a fit from the observations
@@ -253,15 +253,11 @@ const methods = {
     const rhs = [];
     let a = 0;
     let b = 0;
-    let c;
-    let i;
-    let j;
-    let l;
     const len = data.length;
     const k = options.order + 1;
 
-    for (i = 0; i < k; i++) {
-      for (l = 0; l < len; l++) {
+    for (let i = 0; i < k; i++) {
+      for (let l = 0; l < len; l++) {
         if (data[l][1] !== null) {
           a += (data[l][0] ** i) * data[l][1];
         }
@@ -270,9 +266,9 @@ const methods = {
       lhs.push(a);
       a = 0;
 
-      c = [];
-      for (j = 0; j < k; j++) {
-        for (l = 0; l < len; l++) {
+      const c = [];
+      for (let j = 0; j < k; j++) {
+        for (let l = 0; l < len; l++) {
           if (data[l][1] !== null) {
             b += data[l][0] ** (i + j);
           }
@@ -297,7 +293,7 @@ const methods = {
     const points = data.map(point => predict(point[0]));
 
     let string = 'y = ';
-    for (i = coefficients.length - 1; i >= 0; i--) {
+    for (let i = coefficients.length - 1; i >= 0; i--) {
       if (i > 1) {
         string += `${coefficients[i]}x^${i} + `;
       } else if (i === 1) {
@@ -316,6 +312,130 @@ const methods = {
     };
   },
 
+  gaussian(data, options) {
+    const sumData = [];
+    sumData[0] = [data[0][0], data[0][1]];
+
+    for (let i = 1; i < data.length; i++) {
+      sumData.push([data[i][0], data[i][1] + sumData[i - 1][1]]);
+    }
+
+    const max = sumData[data.length - 1][1];
+    const width = sumData[data.length - 1][0] - sumData[0][0];
+    const relative = [];
+
+    for (let i = 0; i < data.length; i++) {
+      relative.push([sumData[i][0], sumData[i][1] / max]);
+    }
+
+    const sum = [0, 0, 0, 0, 0, 0];
+    const p = 22.64172356;
+
+    for (let i = 0; i < relative.length; i++) {
+      const psi = relative[i][1];
+      const q = -14.1723356 * Math.log(psi / (1 - psi));
+      const root2 = Math.sqrt(((q * q) / 4) + ((p * p * p) / 27));
+      const root3 = (root2 - (q / 2)) ** (1 / 3);
+      const z = root3 - (p / (3 * root3));
+      if (z < 1.4 && z > -1.4) {
+        const sx = relative[i][0];
+        sum[0] += sx;
+        sum[1] += z;
+        sum[2] += sx * sx;
+        sum[3] += sx * z;
+        sum[4] += z * z;
+        sum[5] += 1;
+      }
+    }
+
+    const denominator = ((sum[5] * sum[2]) - (sum[0] * sum[0]));
+    const A = ((sum[1] * sum[2]) - (sum[0] * sum[3])) / denominator;
+    const B = ((sum[5] * sum[3]) - (sum[0] * sum[1])) / denominator;
+    const mu = round(-(A / B), options.precision);
+    const sigma = round(1 / B, options.precision);
+    const norm = (max * width) / (relative.length * 0.3989423 * B);
+
+    const predict = x => ([
+      round(x, options.precision),
+      round(norm * Math.exp(-0.5 * (A + (B * x)) * (A + (B * x))), options.precision),
+    ]);
+
+    const points = data.map(point => predict(point[0]));
+
+    return {
+      points,
+      predict,
+      equation: [mu, sigma],
+      r2: round(determinationCoefficient(data, points), options.precision),
+    };
+  },
+
+  sinusoidal(data, options) {
+    const period = options.period || data[data.length - 1][0] - data[0][0];
+    const sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    const b = (2 * Math.PI) / period;
+    let sx;
+    let bx;
+    let cos;
+    let sin;
+
+    for (let i = 0; i < data.length; i++) {
+      if (data[i][1] !== null) {
+        sx = data[i][0];
+        const y = data[i][1];
+        bx = b * sx;
+        cos = Math.cos(bx);
+        sin = Math.sin(bx);
+        sum[0] += cos * cos;
+        sum[1] += cos * sin;
+        sum[2] += sin * sin;
+        sum[3] += y * cos;
+        sum[4] += y * sin;
+        sum[5] += 1;
+        sum[6] += cos;
+        sum[7] += sin;
+        sum[8] += y;
+      }
+    }
+
+    const n = sum[5];
+    const termss = sum[2] - ((sum[7] * sum[7]) / n);
+    const termsc = sum[1] - ((sum[6] * sum[7]) / n);
+    const termcc = sum[0] - ((sum[6] * sum[6]) / n);
+    const termys = sum[4] - ((sum[8] * sum[7]) / n);
+    const termyc = sum[3] - ((sum[8] * sum[6]) / n);
+
+    const termA = (termcc * termys) - (termsc * termyc);
+    const termB = (termss * termyc) - (termsc * termys);
+    const termC = (termss * termcc) - (termsc * termsc);
+
+    const sqAB = (termA * termA) + (termB * termB);
+    const sqB = termB * termB;
+    const ratio = sqB / sqAB;
+    let a = (Math.sqrt(sqAB * sqB) / termC) / termB;
+    let c = Math.atan2(ratio, (ratio * termA) / termB);
+    a = a < 0 ? -a : a;
+    c += a < 0 ? Math.PI : 0;
+    c += c < 0 ? 2 * Math.PI : 0;
+    const d = (sum[8] - (a * Math.cos(c) * sum[7]) - (a * Math.sin(c) * sum[6])) / n;
+    a = round(a, options.precision);
+    c = round(c, options.precision);
+
+    const predict = x => ([
+      round(x, options.precision),
+      round((a * Math.sin(((2 * Math.PI * x) / period) + c)) + d, options.precision),
+    ]);
+
+    const points = data.map(point => predict(point[0]));
+
+    return {
+      points,
+      predict,
+      equation: [a, c],
+      string: `y = ${a} sin(2πx/${period} + ${c})`,
+      r2: round(determinationCoefficient(data, points), options.precision),
+    };
+  },
 };
 
 function createWrapper() {

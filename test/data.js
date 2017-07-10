@@ -190,3 +190,23 @@ export const polynomial = {
   },
 
 };
+
+export const sinusoidal = {
+  positiveCoefficients: {
+    r2: 1,
+    equation: [2, 3],
+    predicted: [6, -0.28],
+    string: 'y = 2 sin(2πx/4 + 3)',
+    data: [[1, -1.979984993], [2, -0.2822400161], [3, 1.979984993], [4, 0.2822400161], [5, -1.979984993]],
+    points: [[1, -1.98], [2, -0.28], [3, 1.98], [4, 0.28], [5, -1.98]],
+  },
+
+  positiveCoefficientsWithEmpty: {
+    r2: 1,
+    equation: [2, 3],
+    predicted: [6, -0.28],
+    string: 'y = 2 sin(2πx/4 + 3)',
+    data: [[1, -1.979984993], [2, null], [3, 1.979984993], [4, 0.2822400161], [5, null]],
+    points: [[1, -1.98], [2, -0.28], [3, 1.98], [4, 0.28], [5, -1.98]],
+  },
+};

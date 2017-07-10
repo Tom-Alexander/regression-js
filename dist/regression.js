@@ -59,7 +59,7 @@
     }
   }
 
-  var DEFAULT_OPTIONS = { order: 2, precision: 2 };
+  var DEFAULT_OPTIONS = { order: 2, precision: 2, period: null };
 
   /**
   * Determine the coefficient of determination (r^2) of a fit from the observations
@@ -316,15 +316,11 @@
       var rhs = [];
       var a = 0;
       var b = 0;
-      var c = void 0;
-      var i = void 0;
-      var j = void 0;
-      var l = void 0;
       var len = data.length;
       var k = options.order + 1;
 
-      for (i = 0; i < k; i++) {
-        for (l = 0; l < len; l++) {
+      for (var i = 0; i < k; i++) {
+        for (var l = 0; l < len; l++) {
           if (data[l][1] !== null) {
             a += Math.pow(data[l][0], i) * data[l][1];
           }
@@ -333,11 +329,11 @@
         lhs.push(a);
         a = 0;
 
-        c = [];
-        for (j = 0; j < k; j++) {
-          for (l = 0; l < len; l++) {
-            if (data[l][1] !== null) {
-              b += Math.pow(data[l][0], i + j);
+        var c = [];
+        for (var j = 0; j < k; j++) {
+          for (var _l = 0; _l < len; _l++) {
+            if (data[_l][1] !== null) {
+              b += Math.pow(data[_l][0], i + j);
             }
           }
           c.push(b);
@@ -362,13 +358,13 @@
       });
 
       var string = 'y = ';
-      for (i = coefficients.length - 1; i >= 0; i--) {
-        if (i > 1) {
-          string += coefficients[i] + 'x^' + i + ' + ';
-        } else if (i === 1) {
-          string += coefficients[i] + 'x + ';
+      for (var _i = coefficients.length - 1; _i >= 0; _i--) {
+        if (_i > 1) {
+          string += coefficients[_i] + 'x^' + _i + ' + ';
+        } else if (_i === 1) {
+          string += coefficients[_i] + 'x + ';
         } else {
-          string += coefficients[i];
+          string += coefficients[_i];
         }
       }
 
@@ -377,6 +373,131 @@
         points: points,
         predict: predict,
         equation: [].concat(_toConsumableArray(coefficients)).reverse(),
+        r2: round(determinationCoefficient(data, points), options.precision)
+      };
+    },
+    gaussian: function gaussian(data, options) {
+      var sumData = [];
+      sumData[0] = [data[0][0], data[0][1]];
+
+      for (var i = 1; i < data.length; i++) {
+        sumData.push([data[i][0], data[i][1] + sumData[i - 1][1]]);
+      }
+
+      var max = sumData[data.length - 1][1];
+      var width = sumData[data.length - 1][0] - sumData[0][0];
+      var relative = [];
+
+      for (var _i2 = 0; _i2 < data.length; _i2++) {
+        relative.push([sumData[_i2][0], sumData[_i2][1] / max]);
+      }
+
+      var sum = [0, 0, 0, 0, 0, 0];
+      var p = 22.64172356;
+
+      for (var _i3 = 0; _i3 < relative.length; _i3++) {
+        var psi = relative[_i3][1];
+        var q = -14.1723356 * Math.log(psi / (1 - psi));
+        var root2 = Math.sqrt(q * q / 4 + p * p * p / 27);
+        var root3 = Math.pow(root2 - q / 2, 1 / 3);
+        var z = root3 - p / (3 * root3);
+        if (z < 1.4 && z > -1.4) {
+          var sx = relative[_i3][0];
+          sum[0] += sx;
+          sum[1] += z;
+          sum[2] += sx * sx;
+          sum[3] += sx * z;
+          sum[4] += z * z;
+          sum[5] += 1;
+        }
+      }
+
+      var denominator = sum[5] * sum[2] - sum[0] * sum[0];
+      var A = (sum[1] * sum[2] - sum[0] * sum[3]) / denominator;
+      var B = (sum[5] * sum[3] - sum[0] * sum[1]) / denominator;
+      var mu = round(-(A / B), options.precision);
+      var sigma = round(1 / B, options.precision);
+      var norm = max * width / (relative.length * 0.3989423 * B);
+
+      var predict = function predict(x) {
+        return [round(x, options.precision), round(norm * Math.exp(-0.5 * (A + B * x) * (A + B * x)), options.precision)];
+      };
+
+      var points = data.map(function (point) {
+        return predict(point[0]);
+      });
+
+      return {
+        points: points,
+        predict: predict,
+        equation: [mu, sigma],
+        r2: round(determinationCoefficient(data, points), options.precision)
+      };
+    },
+    sinusoidal: function sinusoidal(data, options) {
+      var period = options.period || data[data.length - 1][0] - data[0][0];
+      var sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      var b = 2 * Math.PI / period;
+      var sx = void 0;
+      var bx = void 0;
+      var cos = void 0;
+      var sin = void 0;
+
+      for (var i = 0; i < data.length; i++) {
+        if (data[i][1] !== null) {
+          sx = data[i][0];
+          var y = data[i][1];
+          bx = b * sx;
+          cos = Math.cos(bx);
+          sin = Math.sin(bx);
+          sum[0] += cos * cos;
+          sum[1] += cos * sin;
+          sum[2] += sin * sin;
+          sum[3] += y * cos;
+          sum[4] += y * sin;
+          sum[5] += 1;
+          sum[6] += cos;
+          sum[7] += sin;
+          sum[8] += y;
+        }
+      }
+
+      var n = sum[5];
+      var termss = sum[2] - sum[7] * sum[7] / n;
+      var termsc = sum[1] - sum[6] * sum[7] / n;
+      var termcc = sum[0] - sum[6] * sum[6] / n;
+      var termys = sum[4] - sum[8] * sum[7] / n;
+      var termyc = sum[3] - sum[8] * sum[6] / n;
+
+      var termA = termcc * termys - termsc * termyc;
+      var termB = termss * termyc - termsc * termys;
+      var termC = termss * termcc - termsc * termsc;
+
+      var sqAB = termA * termA + termB * termB;
+      var sqB = termB * termB;
+      var ratio = sqB / sqAB;
+      var a = Math.sqrt(sqAB * sqB) / termC / termB;
+      var c = Math.atan2(ratio, ratio * termA / termB);
+      a = a < 0 ? -a : a;
+      c += a < 0 ? Math.PI : 0;
+      c += c < 0 ? 2 * Math.PI : 0;
+      var d = (sum[8] - a * Math.cos(c) * sum[7] - a * Math.sin(c) * sum[6]) / n;
+      a = round(a, options.precision);
+      c = round(c, options.precision);
+
+      var predict = function predict(x) {
+        return [round(x, options.precision), round(a * Math.sin(2 * Math.PI * x / period + c) + d, options.precision)];
+      };
+
+      var points = data.map(function (point) {
+        return predict(point[0]);
+      });
+
+      return {
+        points: points,
+        predict: predict,
+        equation: [a, c],
+        string: 'y = ' + a + ' sin(2\u03C0x/' + period + ' + ' + c + ')',
         r2: round(determinationCoefficient(data, points), options.precision)
       };
     }
