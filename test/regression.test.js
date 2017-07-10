@@ -17,7 +17,7 @@ describe('models', () => {
         const example = models[model][name];
         describe(name, () => {
           it(`correctly predicts ${name}`, () => {
-            let result = regression(model, example.data, example.order);
+            let result = regression[model](example.data, { order: example.order });
             delete result.predict;
             expect(result).to.deep.equal({
               r2: example.r2,
@@ -28,13 +28,13 @@ describe('models', () => {
           });
 
           it('should correctly forecast data points', () => {
-            const result = regression(model, example.data, example.order);
+            const result = regression[model](example.data, { order: example.order });
             expect(result.predict(example.predicted[0])).to.deep.equal(example.predicted);
           });
 
           it('should take precision options', () => {
-            const notSpecified = regression(model, example.data, example.order);
-            const specified = regression(model, example.data, example.order, { precision: 4 });
+            const notSpecified = regression[model](example.data, { order: example.order });
+            const specified = regression[model](example.data, { precision: 4, order: example.order });
             expect(specified.equation).to.deep.equal(example.equation.map(v => round(v, 4)));
             expect(notSpecified.equation).to.deep.equal(example.equation.map(v => round(v, 2)));
           });

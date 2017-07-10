@@ -1,4 +1,4 @@
-const DEFAULT_PRECISION = 2;
+const DEFAULT_OPTIONS = { order: 2, precision: 2 };
 
 /**
 * Determine the coefficient of determination (r^2) of a fit from the observations
@@ -110,7 +110,7 @@ export function round(number, precision) {
 * @namespace
 */
 const methods = {
-  linear(data, _order, options) {
+  linear(data, options) {
     const sum = [0, 0, 0, 0, 0];
     let len = 0;
 
@@ -146,7 +146,7 @@ const methods = {
     };
   },
 
-  exponential(data, _order, options) {
+  exponential(data, options) {
     const sum = [0, 0, 0, 0, 0, 0];
 
     for (let n = 0; n < data.length; n++) {
@@ -181,7 +181,7 @@ const methods = {
     };
   },
 
-  logarithmic(data, _order, options) {
+  logarithmic(data, options) {
     const sum = [0, 0, 0, 0];
     const len = data.length;
 
@@ -214,7 +214,7 @@ const methods = {
     };
   },
 
-  power(data, _order, options) {
+  power(data, options) {
     const sum = [0, 0, 0, 0, 0];
     const len = data.length;
 
@@ -248,24 +248,17 @@ const methods = {
     };
   },
 
-  polynomial(data, order, options) {
+  polynomial(data, options) {
     const lhs = [];
     const rhs = [];
     let a = 0;
     let b = 0;
     let c;
-    let k;
-
     let i;
     let j;
     let l;
     const len = data.length;
-
-    if (typeof order === 'undefined') {
-      k = 3;
-    } else {
-      k = order + 1;
-    }
+    const k = options.order + 1;
 
     for (i = 0; i < k; i++) {
       for (l = 0; l < len; l++) {
@@ -325,20 +318,19 @@ const methods = {
 
 };
 
-export default function regression(method, data, order, options) {
-  const methodOptions = (
-    ((typeof order === 'object') && (typeof options === 'undefined'))
-    ? order
-    : options || {}
-  );
+function createWrapper() {
+  const reduce = (accumulator, name) => ({
+    ...accumulator,
+    [name](data, supplied) {
+      return methods[name](data, {
+        ...DEFAULT_OPTIONS,
+        ...supplied,
+      });
+    },
+  });
 
-  if (!methodOptions.precision) {
-    methodOptions.precision = DEFAULT_PRECISION;
-  }
-
-  if (typeof method === 'string') {
-    return methods[method.toLowerCase()](data, order, methodOptions);
-  }
-
-  return null;
+  return Object.keys(methods).reduce(reduce, {});
 }
+
+const regression = createWrapper();
+export default regression;

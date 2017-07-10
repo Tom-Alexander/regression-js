@@ -17,12 +17,34 @@
     value: true
   });
   exports.round = round;
-  exports.default = regression;
 
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  var _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
   };
 
   function _toConsumableArray(arr) {
@@ -37,7 +59,7 @@
     }
   }
 
-  var DEFAULT_PRECISION = 2;
+  var DEFAULT_OPTIONS = { order: 2, precision: 2 };
 
   /**
   * Determine the coefficient of determination (r^2) of a fit from the observations
@@ -141,7 +163,7 @@
   * @return {numbr} - The number, rounded
   */
   function round(number, precision) {
-    var factor = 10 ** precision;
+    var factor = Math.pow(10, precision);
     return Math.round(number * factor) / factor;
   }
 
@@ -151,7 +173,7 @@
   * @namespace
   */
   var methods = {
-    linear: function linear(data, _order, options) {
+    linear: function linear(data, options) {
       var sum = [0, 0, 0, 0, 0];
       var len = 0;
 
@@ -187,7 +209,7 @@
         string: intercept === 0 ? 'y = ' + gradient + 'x' : 'y = ' + gradient + 'x + ' + intercept
       };
     },
-    exponential: function exponential(data, _order, options) {
+    exponential: function exponential(data, options) {
       var sum = [0, 0, 0, 0, 0, 0];
 
       for (var n = 0; n < data.length; n++) {
@@ -222,7 +244,7 @@
         r2: round(determinationCoefficient(data, points), options.precision)
       };
     },
-    logarithmic: function logarithmic(data, _order, options) {
+    logarithmic: function logarithmic(data, options) {
       var sum = [0, 0, 0, 0];
       var len = data.length;
 
@@ -231,7 +253,7 @@
           sum[0] += Math.log(data[n][0]);
           sum[1] += data[n][1] * Math.log(data[n][0]);
           sum[2] += data[n][1];
-          sum[3] += Math.log(data[n][0]) ** 2;
+          sum[3] += Math.pow(Math.log(data[n][0]), 2);
         }
       }
 
@@ -255,7 +277,7 @@
         r2: round(determinationCoefficient(data, points), options.precision)
       };
     },
-    power: function power(data, _order, options) {
+    power: function power(data, options) {
       var sum = [0, 0, 0, 0, 0];
       var len = data.length;
 
@@ -264,17 +286,17 @@
           sum[0] += Math.log(data[n][0]);
           sum[1] += Math.log(data[n][1]) * Math.log(data[n][0]);
           sum[2] += Math.log(data[n][1]);
-          sum[3] += Math.log(data[n][0]) ** 2;
+          sum[3] += Math.pow(Math.log(data[n][0]), 2);
         }
       }
 
-      var b = (len * sum[1] - sum[0] * sum[2]) / (len * sum[3] - sum[0] ** 2);
+      var b = (len * sum[1] - sum[0] * sum[2]) / (len * sum[3] - Math.pow(sum[0], 2));
       var a = (sum[2] - b * sum[0]) / len;
       var coeffA = round(Math.exp(a), options.precision);
       var coeffB = round(b, options.precision);
 
       var predict = function predict(x) {
-        return [round(x, options.precision), round(round(coeffA * x ** coeffB, options.precision), options.precision)];
+        return [round(x, options.precision), round(round(coeffA * Math.pow(x, coeffB), options.precision), options.precision)];
       };
 
       var points = data.map(function (point) {
@@ -289,29 +311,22 @@
         r2: round(determinationCoefficient(data, points), options.precision)
       };
     },
-    polynomial: function polynomial(data, order, options) {
+    polynomial: function polynomial(data, options) {
       var lhs = [];
       var rhs = [];
       var a = 0;
       var b = 0;
       var c = void 0;
-      var k = void 0;
-
       var i = void 0;
       var j = void 0;
       var l = void 0;
       var len = data.length;
-
-      if (typeof order === 'undefined') {
-        k = 3;
-      } else {
-        k = order + 1;
-      }
+      var k = options.order + 1;
 
       for (i = 0; i < k; i++) {
         for (l = 0; l < len; l++) {
           if (data[l][1] !== null) {
-            a += data[l][0] ** i * data[l][1];
+            a += Math.pow(data[l][0], i) * data[l][1];
           }
         }
 
@@ -322,7 +337,7 @@
         for (j = 0; j < k; j++) {
           for (l = 0; l < len; l++) {
             if (data[l][1] !== null) {
-              b += data[l][0] ** (i + j);
+              b += Math.pow(data[l][0], i + j);
             }
           }
           c.push(b);
@@ -338,7 +353,7 @@
 
       var predict = function predict(x) {
         return [round(x, options.precision), round(coefficients.reduce(function (sum, coeff, power) {
-          return sum + coeff * x ** power;
+          return sum + coeff * Math.pow(x, power);
         }, 0), options.precision)];
       };
 
@@ -367,17 +382,16 @@
     }
   };
 
-  function regression(method, data, order, options) {
-    var methodOptions = (typeof order === 'undefined' ? 'undefined' : _typeof(order)) === 'object' && typeof options === 'undefined' ? order : options || {};
+  function createWrapper() {
+    var reduce = function reduce(accumulator, name) {
+      return _extends({}, accumulator, _defineProperty({}, name, function (data, supplied) {
+        return methods[name](data, _extends({}, DEFAULT_OPTIONS, supplied));
+      }));
+    };
 
-    if (!methodOptions.precision) {
-      methodOptions.precision = DEFAULT_PRECISION;
-    }
-
-    if (typeof method === 'string') {
-      return methods[method.toLowerCase()](data, order, methodOptions);
-    }
-
-    return null;
+    return Object.keys(methods).reduce(reduce, {});
   }
+
+  var regression = createWrapper();
+  exports.default = regression;
 });
