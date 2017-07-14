@@ -47,43 +47,38 @@ function determinationCoefficient(data, results) {
 * @return {Array<number>} - Vector of normalized solution coefficients matrix (x)
 */
 function gaussianElimination(input, order) {
-  let i = 0;
-  let j = 0;
-  let k = 0;
-  let maxrow = 0;
-  let tmp = 0;
   const matrix = input;
   const n = input.length - 1;
   const coefficients = [order];
 
-  for (i = 0; i < n; i++) {
-    maxrow = i;
-    for (j = i + 1; j < n; j++) {
+  for (let i = 0; i < n; i++) {
+    let maxrow = i;
+    for (let j = i + 1; j < n; j++) {
       if (Math.abs(matrix[i][j]) > Math.abs(matrix[i][maxrow])) {
         maxrow = j;
       }
     }
 
-    for (k = i; k < n + 1; k++) {
-      tmp = matrix[k][i];
+    for (let k = i; k < n + 1; k++) {
+      const tmp = matrix[k][i];
       matrix[k][i] = matrix[k][maxrow];
       matrix[k][maxrow] = tmp;
     }
 
-    for (j = i + 1; j < n; j++) {
-      for (k = n; k >= i; k--) {
+    for (let j = i + 1; j < n; j++) {
+      for (let k = n; k >= i; k--) {
         matrix[k][j] -= (matrix[k][i] * matrix[i][j]) / matrix[i][i];
       }
     }
   }
 
-  for (j = n - 1; j >= 0; j--) {
-    tmp = 0;
-    for (k = j + 1; k < n; k++) {
-      tmp += matrix[k][j] * coefficients[k];
+  for (let j = n - 1; j >= 0; j--) {
+    let total = 0;
+    for (let k = j + 1; k < n; k++) {
+      total += matrix[k][j] * coefficients[k];
     }
 
-    coefficients[j] = (matrix[n][j] - tmp) / matrix[j][j];
+    coefficients[j] = (matrix[n][j] - total) / matrix[j][j];
   }
 
   return coefficients;
