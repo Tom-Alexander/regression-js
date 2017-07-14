@@ -120,7 +120,7 @@ export const power = {
 export const polynomial = {
 
   positiveLinearGradient: {
-    order: 1,
+    config: { order: 1 },
     r2: 1,
     equation: [2, 0],
     string: 'y = 2x + 0',
@@ -130,7 +130,7 @@ export const polynomial = {
   },
 
   negativeLinearGradient: {
-    order: 1,
+    config: { order: 1 },
     r2: 1,
     equation: [-2, 0],
     string: 'y = -2x + 0',
@@ -140,7 +140,7 @@ export const polynomial = {
   },
 
   parabolaPositiveCoefficients: {
-    order: 2,
+    config: { order: 2 },
     r2: 1,
     equation: [1, 2, 3],
     predicted: [4, 27],
@@ -150,7 +150,7 @@ export const polynomial = {
   },
 
   parabolaNegativeCoefficients: {
-    order: 2,
+    config: { order: 2 },
     r2: 1,
     equation: [-1, -2, -3],
     predicted: [4, -27],
@@ -160,7 +160,7 @@ export const polynomial = {
   },
 
   cubicPositiveCoefficients: {
-    order: 3,
+    config: { order: 3 },
     r2: 1,
     equation: [2, 2, 2, 2],
     predicted: [4, 170],
@@ -170,7 +170,7 @@ export const polynomial = {
   },
 
   cubicNegativeCoefficients: {
-    order: 3,
+    config: { order: 3 },
     r2: 1,
     equation: [-2, -2, -2, -2],
     predicted: [4, -170],
@@ -180,7 +180,7 @@ export const polynomial = {
   },
 
   cubicPositiveCoefficientsWithEmpty: {
-    order: 3,
+    config: { order: 3 },
     r2: 1,
     equation: [2, 2, 2, 2],
     predicted: [4, 170],

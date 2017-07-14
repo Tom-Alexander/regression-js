@@ -312,64 +312,6 @@ const methods = {
     };
   },
 
-  gaussian(data, options) {
-    const sumData = [];
-    sumData[0] = [data[0][0], data[0][1]];
-
-    for (let i = 1; i < data.length; i++) {
-      sumData.push([data[i][0], data[i][1] + sumData[i - 1][1]]);
-    }
-
-    const max = sumData[data.length - 1][1];
-    const width = sumData[data.length - 1][0] - sumData[0][0];
-    const relative = [];
-
-    for (let i = 0; i < data.length; i++) {
-      relative.push([sumData[i][0], sumData[i][1] / max]);
-    }
-
-    const sum = [0, 0, 0, 0, 0, 0];
-    const p = 22.64172356;
-
-    for (let i = 0; i < relative.length; i++) {
-      const psi = relative[i][1];
-      const q = -14.1723356 * Math.log(psi / (1 - psi));
-      const root2 = Math.sqrt(((q * q) / 4) + ((p * p * p) / 27));
-      const root3 = (root2 - (q / 2)) ** (1 / 3);
-      const z = root3 - (p / (3 * root3));
-      if (z < 1.4 && z > -1.4) {
-        const sx = relative[i][0];
-        sum[0] += sx;
-        sum[1] += z;
-        sum[2] += sx * sx;
-        sum[3] += sx * z;
-        sum[4] += z * z;
-        sum[5] += 1;
-      }
-    }
-
-    const denominator = ((sum[5] * sum[2]) - (sum[0] * sum[0]));
-    const A = ((sum[1] * sum[2]) - (sum[0] * sum[3])) / denominator;
-    const B = ((sum[5] * sum[3]) - (sum[0] * sum[1])) / denominator;
-    const mu = round(-(A / B), options.precision);
-    const sigma = round(1 / B, options.precision);
-    const norm = (max * width) / (relative.length * 0.3989423 * B);
-
-    const predict = x => ([
-      round(x, options.precision),
-      round(norm * Math.exp(-0.5 * (A + (B * x)) * (A + (B * x))), options.precision),
-    ]);
-
-    const points = data.map(point => predict(point[0]));
-
-    return {
-      points,
-      predict,
-      equation: [mu, sigma],
-      r2: round(determinationCoefficient(data, points), options.precision),
-    };
-  },
-
   sinusoidal(data, options) {
     const period = options.period || data[data.length - 1][0] - data[0][0];
     const sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
