@@ -7,7 +7,7 @@
 <a>
 <img src="https://badge.fury.io/js/regression.svg" alt="npm version" />
 </a>
-<a href='https://coveralls.io/github/Tom-Alexander/regression-js?branch=master'><img src='https://coveralls.io/repos/github/Tom-Alexander/regression-js/badge.svg?branch=master' alt='Coverage Status' /></a>
+<a href="https://codeclimate.com/github/Tom-Alexander/regression-js/coverage"><img src="https://codeclimate.com/github/Tom-Alexander/regression-js/badges/coverage.svg" /></a>
 <br/>
 <br/>
 <p>
@@ -61,7 +61,6 @@ Fits the input data to a straight line with the equation `y = mx + c`. It return
 ### `regression.power(data, ?options)`
 ### `regression.polynomial(data, ?options)`
 ### `regression.sinusoidal(data, ?options)`
-### `regression.gaussian(data, ?options)`
 
 ## Development
 

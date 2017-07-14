@@ -1,3 +1,5 @@
+env:
+  CODECLIMATE_REPO_TOKEN: 1937cd951ca5a26580a65f98a7b627eb92126bdd2b272e3dec71f8396062d210
 language: node_js
 node_js:
   - "6.1"
