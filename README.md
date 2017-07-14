@@ -11,6 +11,9 @@ Installation
 ============
 
 The library can be installed from both `bower` and `npm`.
+```
+npm install --save regression
+```
 
 Usage
 =====
