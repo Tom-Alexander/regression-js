@@ -5,7 +5,7 @@
     "Tom Alexander <me@tomalexander.co.nz>",
     "Misha Wolfson <misha@ginkgobioworks.com>"
   ],
-  "version": "1.4.0",
+  "version": "2.0.0",
   "license": "MIT",
   "main": "./dist/regression.js",
   "repository": "Tom-Alexander/regression-js",
