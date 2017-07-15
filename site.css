@@ -21,11 +21,11 @@ h1 {
 }
 
 #graph-container {
-    background:#fff;
-    box-shadow:0 3px 20px #222;
-    width:620px;
-    border-radius:10px;
-    padding:15px;
+    width: 620px;
+    padding: 15px;
+    margin: 30px 0;
+    background: #fff;
+    border: 1px solid black;
 }
 
 #graph {
@@ -61,9 +61,9 @@ pre {
 }
 
 a {
-    color:#263369;
+    color: #263369;
 }
 
 a:hover {
-    color:#658eac;
-}   
+    color: #658eac;
+}
