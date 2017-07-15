@@ -1,111 +1,118 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Regression.JS</title>
-        
-        <meta charset="utf-8">
-        
-        <script src="jquery.js"></script>
-        <script src="jquery.flot.js"></script>
-        <script src="regression.min.js"></script>
-        
-        <!--[if lt IE 9]>
-         <script src="excanvas.js"></script>
-        <![endif]-->
-        
-        <link rel="stylesheet" type="text/css" href="site.css">
-        
-        <script>
-        $(function(){
+<head>
+  <title>Regression-js - Tom Alexander</title>
+  <meta charset="utf-8">
+  <script src="jquery.js"></script>
+  <script src="jquery.flot.js"></script>
+  <script src="regression.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="site.css">
+  <script>
+  $(function(){
+    data = [
+      [10, 250],
+      [20, 900],
+      [30, 200],
+      [40, 300],
+      [50, 500],
+      [60, 7384],
+      [70, 800],
+      [80, 1300],
+      [90, 16500],
+      [100, 2300],
+      [110, 24500],
+      [120, 29000],
+      [130, 34000],
+      [140, 40000],
+      [150, 56000],
+      [160, 52000]];
 
-            data = [
-                [10, 250],
-                [20, 900],
-                [30, 200],
-                [40, 300],
-                [50, 500],
-                [60, 7384],
-                [70, 800],
-                [80, 1300],
-                [90, 16500],
-                [100, 2300],
-                [110, 24500],
-                [120, 29000],
-                [130, 34000],
-                [140, 40000],
-                [150, 56000],
-                [160, 52000]];
-            
-            $.plot($('#graph'), [{data: regression('linear', data).points, label: 'Linear'},
-                                 {data: regression('polynomial', data, 2).points, label: 'Polynomial'},
-                                 {data: data, lines: { show: false }, points: { show: true }
-                                 }]);
-        })
-        </script>
-        
-        
-    </head>
-    <body>
-        <div id="init">
-        <h1><strong>regression</strong>.js</h1>
-        <p>
-            <strong>regression</strong>.js is a javascript library containing a collection of  <a target="_blank" href="http://en.wikipedia.org/wiki/Least_squares">least squares</a> fitting methods for finding a trend in a set of data. 
-            It currently contains methods for <code>linear</code>, <code>exponential</code>, <code>logarithmic</code>, <code>power</code> and <code>polynomial</code> trends.
-            <p>Get regression.js from <a href="https://github.com/Tom-Alexander/regression-js"  target="_blank" >Github</a> or download the <a target="_blank" href="https://raw.github.com/Tom-Alexander/regression-js/master/regression.min.js">minified version</a>.<p>
-            </p>
-        
-            <div id="graph-container">
-                 <div id="graph"></div>
-            </div>
-            
-            <h2>Usage</h2>
-           <p>
-            Most regressions require only two paramters - the regression method (<code>linear</code>, <code>exponential</code>, <code>logarithmic</code>, <code>power</code> or <code>polynomial</code>)
-            and a data source. A third paramter can be used to define the degree of a polynomial when a polynomial regression is required.
-            
-            </p>
-            regression.js will return an object containing an equation array and a points array.
+      $.plot($('#graph'), [{data: regression('linear', data).points, label: 'Linear'},
+      { data: regression('polynomial', data, 2).points, label: 'Polynomial'},
+      { data: data, lines: { show: false }, points: { show: true }
+    }]);
+  })
+  </script>
 
-               <h3>Linear regression</h3>
-               <p>equation: <code>[gradient, y-intercept]</code> in the form y = mx + c</p>
-            <pre><code>
-    var data = [[0,1],[32, 67] .... [12, 79]]   
-    var result = regression('linear', data)
-            </code></pre>
-            
-            <h3>Exponential regression</h3>
-            <p>equation: <code>[a, b]</code> in the form y = ae<sup>bx</sup></p>
-            
-            <h3>Logarithmic regression</h3>
-            <p>equation: <code>[a, b]</code> in the form y = a + b ln x</p>
-            
-            <h3>Power law regression</h3>
-            <p>equation: <code>[a, b]</code> in the form y = ax<sup>b</sup></p>
-            
-            <h3>Polynomial regression</h3>
-            <p>equation: <code>[a<sub>0</sub>, .... , a<sub>n</sub>]</code> in the form a<sub>0</sub>x<sup>n</sup> ... + a<sub>n</sub>x<sup>0</sup></p>
-            <pre><code>
-    var data = [[0,1],[32, 67] .... [12, 79]]
-    var result = regression('polynomial', 4)
-            </code></pre>
-            
-            <div id="footer">
-                <hr>
-                    <a  target="_blank" href="http://opensource.org/licenses/MIT">MIT License</a> - <a  target="_blank" href="https://github.com/Tom-Alexander/regression-js">Github</a>
-            </div>
-        </div>
+
+</head>
+<body>
+  <div id="init">
+    <h1><strong>regression-js</strong></h1>
+    <p>
+      <p>Regression-js is a javascript module containing a collection of linear least-squares fitting methods for simple data analysis. It can be found on <a href="https://github.com/Tom-Alexander/regression-js">github</a>.</p>
+      <div id="graph-container">
+        <div id="graph"></div>
+      </div>
+      <h3>Installation</h3>
+      <p>
+        This module works on node and in the browser. It is available as the <code>regression</code> package on <a href="https://www.npmjs.com/package/regression">npm</a>. It is also available on a <a href="https://cdnjs.com/libraries/regression">CDN</a>.
+        <h2>npm</h2>
+        <pre><code>npm install --save regression</code></pre>
+      </p>
+      <h2>Usage</h2>
+      <pre><code>
+  import regression from 'regression';
+  const result regression.linear([0, 1], [32, 67], [12, 79]);
+  const gradient = result.equation[0];
+  const yIntercept result.equation[1];
+      </code></pre>
+      <p>Data is passed into the model as an array. A second parameter can be used to configure the model. The configuration parameter is optional. `null` values are ignored. The precision option will set the number of significant figures the output is rounded to.</p>
+
+      <h3>Configuration options</h3>
+      <p>Below are the default values for the configuration parameter.</p>
+      <pre><code>
+{
+  order: 2,
+  precision: 2,
+}
+      </code></pre>
+      <h3>Properties</h3>
+<ul>
+  <li><p><code>equation</code> an array containing the coefficients of the equation</p></li>
+  <li><p><code>string</code> A string representation of the equation</p></li>
+  <li><p><code>points</code> an array containing the predicted data in the domain of the input</p></li>
+  <li><p><code>r2</code> the coefficient of determination (<i>R</i><sup>2</sup>)</p></li>
+  <li><p><code>predict(x)</code> This function will return the predicted value</p></li>
+</ul>
+      <h2>API</h2>
+
+      <h3>Linear</h3>
+      <p>equation: <code>[gradient, y-intercept]</code> in the form y = mx + c</p>
+
+      <h3>Exponential</h3>
+      <p>equation: <code>[a, b]</code> in the form y = ae<sup>bx</sup></p>
+
+      <h3>Logarithmic</h3>
+      <p>equation: <code>[a, b]</code> in the form y = a + b ln x</p>
+
+      <h3>Power law</h3>
+      <p>equation: <code>[a, b]</code> in the form y = ax<sup>b</sup></p>
+
+      <h3>Polynomial</h3>
+      <p>equation: <code>[a<sub>i</sub>, .... , a<sub>0</sub>]</code> in the form a<sub>i</sub>x<sup>j</sup> ... + a<sub>0</sub>x<sup>0</sup></p>
+      <pre><code>
+        var data = [[0,1],[32, 67] .... [12, 79]];
+        var result = regression.polynomial(data, { order: 3 });
+      </code></pre>
+
+      <div id="footer">
+        <hr>
+        <a  target="_blank" href="https://github.com/Tom-Alexander/regression-js/blob/master/LICENSE">MIT License</a> - <a  target="_blank" href="https://github.com/Tom-Alexander/regression-js">Github</a>
+      </div>
+    </div>
     <script type="text/javascript">
-    
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-37628509-1']);
-      _gaq.push(['_trackPageview']);
-    
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-37628509-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
     </script>
-    </body>
-</html>
+  </body>
+  </html>
