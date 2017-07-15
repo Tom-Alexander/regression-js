@@ -31,7 +31,7 @@ npm install --save regression
 
 ```javascript
 import regression from 'regression';
-const result regression.linear([0, 1], [32, 67], [12, 79]);
+const result regression.linear([[0, 1], [32, 67], [12, 79]]);
 const gradient = result.equation[0];
 const yIntercept result.equation[1];
 ```
@@ -56,26 +56,26 @@ Below are the default values for the configuration parameter.
 
 ## API
 
-### `regression.linear(data, ?options)`
+### `regression.linear(data[, options])`
 Fits the input data to a straight line with the equation ![y = mx + c](http://mathurl.com/ycqyhets.png). It returns the coefficients in the form `[m, c]`.
 
-### `regression.exponential(data, ?options)`
+### `regression.exponential(data[, options])`
 Fits the input data to a exponential curve with the equation ![y = ae^bx](http://mathurl.com/zuys53z.png). It returns the coefficients in the form `[a, b]`.
 
-### `regression.logarithmic(data, ?options)`
+### `regression.logarithmic(data[, options])`
 Fits the input data to a logarithmic curve with the equation ![y = a + b ln x](http://mathurl.com/zye394m.png). It returns the coefficients in the form `[a, b]`.
 
-### `regression.power(data, ?options)`
+### `regression.power(data[, options])`
 Fits the input data to a power law curve with the equation ![y = ax^b](http://mathurl.com/gojkazs.png). It returns the coefficients in the form `[a, b]`.
 
-### `regression.polynomial(data, ?options)`
+### `regression.polynomial(data[, options])`
 Fits the input data to a polynomial curve with the equation ![anx^n ... + a1x + a0](http://mathurl.com/hxz543o.png). It returns the coefficients in the form `[an..., a1, a0]`. The order can be configure with the `order` option.
 
 #### Example
 
 ```javascript
-var data = [[0,1],[32, 67] .... [12, 79]];
-var result = regression.polynomial(data, { order: 3 });
+const data = [[0,1],[32, 67] .... [12, 79]];
+const result = regression.polynomial(data, { order: 3 });
 ```
 
 ## Development
