@@ -4,19 +4,22 @@
 <a href="https://travis-ci.org/Tom-Alexander/regression-js">
 <img src="https://travis-ci.org/Tom-Alexander/regression-js.svg?branch=master"/>
 </a>
-<a>
-<img src="https://badge.fury.io/js/regression.svg" alt="npm version" />
+<a href="https://npmjs.com/package/regression">
+<img src="https://img.shields.io/npm/v/regression.svg" alt="npm version" />
+</a>
+<a href="https://npmjs.com/package/regression">
+<img src="https://img.shields.io/npm/dt/regression.svg" alt="npm downloads" />
 </a>
 <a href="https://codeclimate.com/github/Tom-Alexander/regression-js/coverage"><img src="https://codeclimate.com/github/Tom-Alexander/regression-js/badges/coverage.svg" /></a>
 <br/>
 <br/>
 <p>
-regression-js is a JavaScript module containing a collection of least-squares fitting methods for simple data analysis.
+regression-js is a JavaScript module containing a collection of linear least-squares fitting methods for simple data analysis.
 </p>
 </div>
 
 ## Installation
-This module works on node and in the browser. It is available as the 'regression' package on (npm)[https://www.npmjs.com/package/regression]. It is also available on a (CDN)[https://cdnjs.com/libraries/regression].
+This module works on node and in the browser. It is available as the 'regression' package on [npm](https://www.npmjs.com/package/regression). It is also available on a [CDN](https://cdnjs.com/libraries/regression).
 
 ### npm
 
@@ -33,7 +36,7 @@ const gradient = result.equation[0];
 const yIntercept result.equation[1];
 ```
 
-Data is passed into the model as a 2D array. A second parameter can be used to configure the model. The configuration parameter is optional. `null` values are ignored. The precision option will set the number of significant figures the output is rounded to.
+Data is passed into the model as an array. A second parameter can be used to configure the model. The configuration parameter is optional. `null` values are ignored. The precision option will set the number of significant figures the output is rounded to.
 
 ### Configuration options
 Below are the default values for the configuration parameter.
@@ -41,7 +44,6 @@ Below are the default values for the configuration parameter.
 {
   order: 2,
   precision: 2,
-  period: null,
 }
 ```
 
@@ -55,12 +57,19 @@ Below are the default values for the configuration parameter.
 ## API
 
 ### `regression.linear(data, ?options)`
-Fits the input data to a straight line with the equation `y = mx + c`. It returns the coefficients in the form `[m, c]`.
+Fits the input data to a straight line with the equation ![y = mx + c](http://mathurl.com/ycqyhets.png). It returns the coefficients in the form `[m, c]`.
+
 ### `regression.exponential(data, ?options)`
+Fits the input data to a exponential curve with the equation ![y = ae^bx](http://mathurl.com/zuys53z.png). It returns the coefficients in the form `[a, b]`.
+
 ### `regression.logarithmic(data, ?options)`
+Fits the input data to a logarithmic curve with the equation ![y = ae^bx](http://mathurl.com/zuys53z.png). It returns the coefficients in the form `[a, b]`.
+
 ### `regression.power(data, ?options)`
+Fits the input data to a power law curve with the equation ![y = ax^b](http://mathurl.com/gojkazs.png). It returns the coefficients in the form `[a, b]`.
+
 ### `regression.polynomial(data, ?options)`
-### `regression.sinusoidal(data, ?options)`
+Fits the input data to a polynomial curve with the equation ![y = ax^b](http://mathurl.com/gojkazs.png). It returns the coefficients in the form `[a, b]`. The order can be configure with the `{ order: 3 }` option.
 
 ## Development
 

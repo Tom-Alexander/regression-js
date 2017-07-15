@@ -8,5 +8,3 @@
 - Removes linearThroughOrigin. This is now handled by the linear model.
 - Changes model access
 - Adds predict function
-- Adds sinusoidal model
-- Adds gaussian model
