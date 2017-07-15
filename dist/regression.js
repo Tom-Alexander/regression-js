@@ -1,22 +1,17 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['exports'], factory);
+    define(['module'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports);
+    factory(module);
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports);
+    factory(mod);
     global.regression = mod.exports;
   }
-})(this, function (exports) {
+})(this, function (module) {
   'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.round = round;
 
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -375,7 +370,9 @@
 
   function createWrapper() {
     var reduce = function reduce(accumulator, name) {
-      return _extends({}, accumulator, _defineProperty({}, name, function (data, supplied) {
+      return _extends({
+        _round: round
+      }, accumulator, _defineProperty({}, name, function (data, supplied) {
         return methods[name](data, _extends({}, DEFAULT_OPTIONS, supplied));
       }));
     };
@@ -383,6 +380,5 @@
     return Object.keys(methods).reduce(reduce, {});
   }
 
-  var regression = createWrapper();
-  exports.default = regression;
+  module.exports = createWrapper();
 });

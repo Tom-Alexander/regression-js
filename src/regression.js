@@ -94,7 +94,7 @@ function gaussianElimination(input, order) {
 *
 * @return {numbr} - The number, rounded
 */
-export function round(number, precision) {
+function round(number, precision) {
   const factor = 10 ** precision;
   return Math.round(number * factor) / factor;
 }
@@ -310,6 +310,7 @@ const methods = {
 
 function createWrapper() {
   const reduce = (accumulator, name) => ({
+    _round: round,
     ...accumulator,
     [name](data, supplied) {
       return methods[name](data, {
@@ -322,5 +323,4 @@ function createWrapper() {
   return Object.keys(methods).reduce(reduce, {});
 }
 
-const regression = createWrapper();
-export default regression;
+module.exports = createWrapper();

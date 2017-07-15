@@ -2,11 +2,13 @@
 
 import { expect } from 'chai';
 import * as models from './data';
-import regression, { round } from '../src/regression';
+import regression from '../src/regression';
+
+const { _round } = regression;
 
 describe('round', () => {
   it('rounds to the correct precision', () => {
-    expect(round(0.33333333333333333333, 9)).to.equal(0.333333333);
+    expect(_round(0.33333333333333333333, 9)).to.equal(0.333333333);
   });
 });
 
@@ -35,8 +37,8 @@ describe('models', () => {
           it('should take precision options', () => {
             const notSpecified = regression[model](example.data, example.config);
             const specified = regression[model](example.data, { ...example.config, precision: 4 });
-            expect(specified.equation).to.deep.equal(example.equation.map(v => round(v, 4)));
-            expect(notSpecified.equation).to.deep.equal(example.equation.map(v => round(v, 2)));
+            expect(specified.equation).to.deep.equal(example.equation.map(v => _round(v, 4)));
+            expect(notSpecified.equation).to.deep.equal(example.equation.map(v => _round(v, 2)));
           });
         });
       });
