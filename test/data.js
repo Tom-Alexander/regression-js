@@ -189,24 +189,24 @@ export const polynomial = {
     points: [[0, 2], [1, 8], [2, 30], [3, 80], [4, 170], [5, 312]],
   },
 
-};
-
-export const sinusoidal = {
-  positiveCoefficients: {
+  zeroYValueCubic: {
     r2: 1,
-    equation: [2, 3],
-    predicted: [6, -0.28],
-    string: 'y = 2 sin(2πx/4 + 3)',
-    data: [[1, -1.979984993], [2, -0.2822400161], [3, 1.979984993], [4, 0.2822400161], [5, -1.979984993]],
-    points: [[1, -1.98], [2, -0.28], [3, 1.98], [4, 0.28], [5, -1.98]],
+    config: { order: 3 },
+    equation: [1, 2, 3, -6],
+    predicted: [7, 456],
+    string: 'y = 1x^3 + 2x^2 + 3x + -6',
+    data: [[1, 0], [2, 16], [3, 48], [4, 102], [5, 184], [6, 300]],
+    points: [[1, 0], [2, 16], [3, 48], [4, 102], [5, 184], [6, 300]],
   },
 
-  positiveCoefficientsWithEmpty: {
+  zeroYCoefficientCubic: {
     r2: 1,
-    equation: [2, 3],
-    predicted: [6, -0.28],
-    string: 'y = 2 sin(2πx/4 + 3)',
-    data: [[1, -1.979984993], [2, null], [3, 1.979984993], [4, 0.2822400161], [5, null]],
-    points: [[1, -1.98], [2, -0.28], [3, 1.98], [4, 0.28], [5, -1.98]],
+    config: { order: 3 },
+    equation: [0, 1, 2, 3],
+    predicted: [7, 66],
+    string: 'y = 0x^3 + 1x^2 + 2x + 3',
+    data: [[1, 6], [2, 11], [3, 18], [4, 27], [5, 38], [6, 51]],
+    points: [[1, 6], [2, 11], [3, 18], [4, 27], [5, 38], [6, 51]],
   },
+
 };
