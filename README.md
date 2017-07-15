@@ -63,7 +63,7 @@ Fits the input data to a straight line with the equation ![y = mx + c](http://ma
 Fits the input data to a exponential curve with the equation ![y = ae^bx](http://mathurl.com/zuys53z.png). It returns the coefficients in the form `[a, b]`.
 
 ### `regression.logarithmic(data, ?options)`
-Fits the input data to a logarithmic curve with the equation ![y = ae^bx](http://mathurl.com/zuys53z.png). It returns the coefficients in the form `[a, b]`.
+Fits the input data to a logarithmic curve with the equation ![y = a + b ln x](http://mathurl.com/zye394m.png). It returns the coefficients in the form `[a, b]`.
 
 ### `regression.power(data, ?options)`
 Fits the input data to a power law curve with the equation ![y = ax^b](http://mathurl.com/gojkazs.png). It returns the coefficients in the form `[a, b]`.
