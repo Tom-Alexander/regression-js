@@ -69,7 +69,14 @@ Fits the input data to a logarithmic curve with the equation ![y = ae^bx](http:/
 Fits the input data to a power law curve with the equation ![y = ax^b](http://mathurl.com/gojkazs.png). It returns the coefficients in the form `[a, b]`.
 
 ### `regression.polynomial(data, ?options)`
-Fits the input data to a polynomial curve with the equation ![y = ax^b](http://mathurl.com/gojkazs.png). It returns the coefficients in the form `[a, b]`. The order can be configure with the `{ order: 3 }` option.
+Fits the input data to a polynomial curve with the equation ![anx^n ... + a1x + a0](http://mathurl.com/hxz543o.png). It returns the coefficients in the form `[an..., a1, a0]`. The order can be configure with the `order` option.
+
+#### Example
+
+```javascript
+var data = [[0,1],[32, 67] .... [12, 79]];
+var result = regression.polynomial(data, { order: 3 });
+```
 
 ## Development
 
