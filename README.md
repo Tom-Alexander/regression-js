@@ -31,9 +31,9 @@ npm install --save regression
 
 ```javascript
 import regression from 'regression';
-const result regression.linear([[0, 1], [32, 67], [12, 79]]);
+const result = regression.linear([[0, 1], [32, 67], [12, 79]]);
 const gradient = result.equation[0];
-const yIntercept result.equation[1];
+const yIntercept = result.equation[1];
 ```
 
 Data is passed into the model as an array. A second parameter can be used to configure the model. The configuration parameter is optional. `null` values are ignored. The precision option will set the number of significant figures the output is rounded to.
