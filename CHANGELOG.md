@@ -8,3 +8,6 @@
 - Removes linearThroughOrigin. This is now handled by the linear model.
 - Changes model access
 - Adds predict function
+
+# 2.0.1
+- Fix broken minified distribution
