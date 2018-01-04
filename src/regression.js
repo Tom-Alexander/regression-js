@@ -112,11 +112,11 @@ const methods = {
     for (let n = 0; n < data.length; n++) {
       if (data[n][1] !== null) {
         len++;
-        sum[0] += data[n][0];
-        sum[1] += data[n][1];
-        sum[2] += data[n][0] * data[n][0];
-        sum[3] += data[n][0] * data[n][1];
-        sum[4] += data[n][1] * data[n][1];
+        sum[0] += +data[n][0];
+        sum[1] += +data[n][1];
+        sum[2] += +data[n][0] * +data[n][0];
+        sum[3] += +data[n][0] * +data[n][1];
+        sum[4] += +data[n][1] * +data[n][1];
       }
     }
 
@@ -148,10 +148,10 @@ const methods = {
       if (data[n][1] !== null) {
         sum[0] += data[n][0];
         sum[1] += data[n][1];
-        sum[2] += data[n][0] * data[n][0] * data[n][1];
+        sum[2] += data[n][0] * data[n][0] * +data[n][1];
         sum[3] += data[n][1] * Math.log(data[n][1]);
-        sum[4] += data[n][0] * data[n][1] * Math.log(data[n][1]);
-        sum[5] += data[n][0] * data[n][1];
+        sum[4] += data[n][0] * +data[n][1] * Math.log(data[n][1]);
+        sum[5] += data[n][0] * +data[n][1];
       }
     }
 
