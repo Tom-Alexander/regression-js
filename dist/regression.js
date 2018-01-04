@@ -170,11 +170,11 @@
       for (var n = 0; n < data.length; n++) {
         if (data[n][1] !== null) {
           len++;
-          sum[0] += data[n][0];
-          sum[1] += data[n][1];
-          sum[2] += data[n][0] * data[n][0];
-          sum[3] += data[n][0] * data[n][1];
-          sum[4] += data[n][1] * data[n][1];
+          sum[0] += +data[n][0];
+          sum[1] += +data[n][1];
+          sum[2] += +data[n][0] * +data[n][0];
+          sum[3] += +data[n][0] * +data[n][1];
+          sum[4] += +data[n][1] * +data[n][1];
         }
       }
 
@@ -204,8 +204,8 @@
 
       for (var n = 0; n < data.length; n++) {
         if (data[n][1] !== null) {
-          sum[0] += data[n][0];
-          sum[1] += data[n][1];
+          sum[0] += +data[n][0];
+          sum[1] += +data[n][1];
           sum[2] += data[n][0] * data[n][0] * data[n][1];
           sum[3] += data[n][1] * Math.log(data[n][1]);
           sum[4] += data[n][0] * data[n][1] * Math.log(data[n][1]);
@@ -242,7 +242,7 @@
         if (data[n][1] !== null) {
           sum[0] += Math.log(data[n][0]);
           sum[1] += data[n][1] * Math.log(data[n][0]);
-          sum[2] += data[n][1];
+          sum[2] += +data[n][1];
           sum[3] += Math.pow(Math.log(data[n][0]), 2);
         }
       }
