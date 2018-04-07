@@ -54,17 +54,21 @@
     }
   }
 
-  var DEFAULT_OPTIONS = { order: 2, precision: 2, period: null };
+  var DEFAULT_OPTIONS = {
+    order: 2,
+    precision: 2,
+    period: null
+  };
 
   /**
-  * Determine the coefficient of determination (r^2) of a fit from the observations
-  * and predictions.
-  *
-  * @param {Array<Array<number>>} data - Pairs of observed x-y values
-  * @param {Array<Array<number>>} results - Pairs of observed predicted x-y values
-  *
-  * @return {number} - The r^2 value, or NaN if one cannot be calculated.
-  */
+   * Determine the coefficient of determination (r^2) of a fit from the observations
+   * and predictions.
+   *
+   * @param {Array<Array<number>>} data - Pairs of observed x-y values
+   * @param {Array<Array<number>>} results - Pairs of observed predicted x-y values
+   *
+   * @return {number} - The r^2 value, or NaN if one cannot be calculated.
+   */
   function determinationCoefficient(data, results) {
     var predictions = [];
     var observations = [];
@@ -96,14 +100,14 @@
   }
 
   /**
-  * Determine the solution of a system of linear equations A * x = b using
-  * Gaussian elimination.
-  *
-  * @param {Array<Array<number>>} input - A 2-d matrix of data in row-major form [ A | b ]
-  * @param {number} order - How many degrees to solve for
-  *
-  * @return {Array<number>} - Vector of normalized solution coefficients matrix (x)
-  */
+   * Determine the solution of a system of linear equations A * x = b using
+   * Gaussian elimination.
+   *
+   * @param {Array<Array<number>>} input - A 2-d matrix of data in row-major form [ A | b ]
+   * @param {number} order - How many degrees to solve for
+   *
+   * @return {Array<number>} - Vector of normalized solution coefficients matrix (x)
+   */
   function gaussianElimination(input, order) {
     var matrix = input;
     var n = input.length - 1;
@@ -143,25 +147,25 @@
   }
 
   /**
-  * Round a number to a precision, specificed in number of decimal places
-  *
-  * @param {number} number - The number to round
-  * @param {number} precision - The number of decimal places to round to:
-  *                             > 0 means decimals, < 0 means powers of 10
-  *
-  *
-  * @return {numbr} - The number, rounded
-  */
+   * Round a number to a precision, specificed in number of decimal places
+   *
+   * @param {number} number - The number to round
+   * @param {number} precision - The number of decimal places to round to:
+   *                             > 0 means decimals, < 0 means powers of 10
+   *
+   *
+   * @return {numbr} - The number, rounded
+   */
   function round(number, precision) {
     var factor = Math.pow(10, precision);
     return Math.round(number * factor) / factor;
   }
 
   /**
-  * The set of all fitting methods
-  *
-  * @namespace
-  */
+   * The set of all fitting methods
+   *
+   * @namespace
+   */
   var methods = {
     linear: function linear(data, options) {
       var sum = [0, 0, 0, 0, 0];
@@ -187,9 +191,7 @@
         return [round(x, options.precision), round(gradient * x + intercept, options.precision)];
       };
 
-      var points = data.map(function (point) {
-        return predict(point[0]);
-      });
+      var points = pointsPrediction(data, predict, options.residuals);
 
       return {
         points: points,
@@ -222,9 +224,7 @@
         return [round(x, options.precision), round(coeffA * Math.exp(coeffB * x), options.precision)];
       };
 
-      var points = data.map(function (point) {
-        return predict(point[0]);
-      });
+      var points = pointsPrediction(data, predict, options.residuals);
 
       return {
         points: points,
@@ -255,9 +255,7 @@
         return [round(x, options.precision), round(round(coeffA + coeffB * Math.log(x), options.precision), options.precision)];
       };
 
-      var points = data.map(function (point) {
-        return predict(point[0]);
-      });
+      var points = pointsPrediction(data, predict, options.residuals);
 
       return {
         points: points,
@@ -289,9 +287,7 @@
         return [round(x, options.precision), round(round(coeffA * Math.pow(x, coeffB), options.precision), options.precision)];
       };
 
-      var points = data.map(function (point) {
-        return predict(point[0]);
-      });
+      var points = pointsPrediction(data, predict, options.residuals);
 
       return {
         points: points,
@@ -343,9 +339,7 @@
         }, 0), options.precision)];
       };
 
-      var points = data.map(function (point) {
-        return predict(point[0]);
-      });
+      var points = pointsPrediction(data, predict, options.residuals);
 
       var string = 'y = ';
       for (var _i = coefficients.length - 1; _i >= 0; _i--) {
@@ -367,6 +361,34 @@
       };
     }
   };
+
+  /**
+   * Predicts the points used for function calculation based on the predct function generated.
+   * @param  {Array<Array<number>>} data - The original points input
+   * @param  {function(number)} predict - The prediction function generated
+   * @param  {bool} enableResiduals - If it is exactly equal to true, there are residuals added to the response
+   *
+   * @return {Array<Array<number>>} - Returns the predicted points.
+   */
+  function precitPoints(data, predict, enableResiduals) {
+    var points = [];
+    // New option to maintain backwards-compatibility
+    if (enableResiduals === true) {
+      points = data.map(function (point) {
+        var predictedCoordinates = predict(point[0]);
+        // Residual = Actual - Predicted
+        return {
+          coordinates: predicted,
+          residuals: point[1] - prediction[1]
+        };
+      });
+    } else {
+      points = data.map(function (point) {
+        return predict(point[0]);
+      });
+    }
+    return points;
+  }
 
   function createWrapper() {
     var reduce = function reduce(accumulator, name) {
