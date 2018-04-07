@@ -370,7 +370,7 @@
    *
    * @return {Array<Array<number>>} - Returns the predicted points.
    */
-  function precitPoints(data, predict, enableResiduals) {
+  function predictPoints(data, predict, enableResiduals) {
     var points = [];
     // New option to maintain backwards-compatibility
     if (enableResiduals === true) {
