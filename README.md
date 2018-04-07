@@ -44,6 +44,7 @@ Below are the default values for the configuration parameter.
 {
   order: 2,
   precision: 2,
+  residuals: false
 }
 ```
 
