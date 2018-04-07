@@ -1,8 +1,4 @@
-const DEFAULT_OPTIONS = {
-  order: 2,
-  precision: 2,
-  period: null
-};
+const DEFAULT_OPTIONS = { order: 2, precision: 2, period: null };
 
 /**
  * Determine the coefficient of determination (r^2) of a fit from the observations
@@ -104,6 +100,30 @@ function round(number, precision) {
 }
 
 /**
+ * Predicts the points used for function calculation based on the predct function generated.
+ * @param  {Array<Array<number>>} data - The original points input
+ * @param  {function(number)} predict - The prediction function generated
+ * @param  {bool} enableResiduals - Indicates whether residuals added to the response
+ *
+ * @return {predictedPoints} - Returns the predicted points.
+ */
+function predictPoints(data, predict, enableResiduals) {
+  let points = [];
+  if (enableResiduals === true) {
+    points = data.map((point) => {
+      const predictedCoordinates = predict(point[0]);
+      return {
+        coordinates: predictedCoordinates,
+        residuals: point[1] - predictedCoordinates[1], // Residual = Actual - Predicted
+      };
+    });
+  } else {
+    points = data.map(point => predict(point[0]));
+  }
+  return points;
+}
+
+/**
  * The set of all fitting methods
  *
  * @namespace
@@ -131,10 +151,10 @@ const methods = {
 
     const predict = x => ([
       round(x, options.precision),
-      round((gradient * x) + intercept, options.precision)
+      round((gradient * x) + intercept, options.precision),
     ]);
 
-    const points = pointsPrediction(data, predict, options.residuals);
+    const points = predictPoints(data, predict, options.residuals);
 
     return {
       points,
@@ -169,7 +189,7 @@ const methods = {
       round(coeffA * Math.exp(coeffB * x), options.precision),
     ]);
 
-    const points = pointsPrediction(data, predict, options.residuals);
+    const points = predictPoints(data, predict, options.residuals);
 
     return {
       points,
@@ -202,7 +222,7 @@ const methods = {
       round(round(coeffA + (coeffB * Math.log(x)), options.precision), options.precision),
     ]);
 
-    const points = pointsPrediction(data, predict, options.residuals);
+    const points = predictPoints(data, predict, options.residuals);
 
     return {
       points,
@@ -236,7 +256,7 @@ const methods = {
       round(round(coeffA * (x ** coeffB), options.precision), options.precision),
     ]);
 
-    const points = pointsPrediction(data, predict, options.residuals);
+    const points = predictPoints(data, predict, options.residuals);
 
     return {
       points,
@@ -289,7 +309,7 @@ const methods = {
       ),
     ]);
 
-    const points = pointsPrediction(data, predict, options.residuals);
+    const points = predictPoints(data, predict, options.residuals);
 
     let string = 'y = ';
     for (let i = coefficients.length - 1; i >= 0; i--) {
@@ -311,32 +331,6 @@ const methods = {
     };
   },
 };
-
-/**
- * Predicts the points used for function calculation based on the predct function generated.
- * @param  {Array<Array<number>>} data - The original points input
- * @param  {function(number)} predict - The prediction function generated
- * @param  {bool} enableResiduals - If it is exactly equal to true, there are residuals added to the response
- *
- * @return {Array<Array<number>>} - Returns the predicted points.
- */
-function predictPoints(data, predict, enableResiduals) {
-  let points = [];
-  // New option to maintain backwards-compatibility
-  if (enableResiduals === true) {
-    points = data.map(point => {
-      const predictedCoordinates = predict(point[0]);
-      // Residual = Actual - Predicted
-      return {
-        coordinates: predicted,
-        residuals: point[1] - prediction[1]
-      }
-    });
-  } else {
-    points = data.map(point => predict(point[0]));
-  }
-  return points;
-}
 
 function createWrapper() {
   const reduce = (accumulator, name) => ({

@@ -54,11 +54,7 @@
     }
   }
 
-  var DEFAULT_OPTIONS = {
-    order: 2,
-    precision: 2,
-    period: null
-  };
+  var DEFAULT_OPTIONS = { order: 2, precision: 2, period: null };
 
   /**
    * Determine the coefficient of determination (r^2) of a fit from the observations
@@ -162,6 +158,32 @@
   }
 
   /**
+   * Predicts the points used for function calculation based on the predct function generated.
+   * @param  {Array<Array<number>>} data - The original points input
+   * @param  {function(number)} predict - The prediction function generated
+   * @param  {bool} enableResiduals - Indicates whether residuals added to the response
+   *
+   * @return {predictedPoints} - Returns the predicted points.
+   */
+  function predictPoints(data, predict, enableResiduals) {
+    var points = [];
+    if (enableResiduals === true) {
+      points = data.map(function (point) {
+        var predictedCoordinates = predict(point[0]);
+        return {
+          coordinates: predictedCoordinates,
+          residuals: point[1] - predictedCoordinates[1] // Residual = Actual - Predicted
+        };
+      });
+    } else {
+      points = data.map(function (point) {
+        return predict(point[0]);
+      });
+    }
+    return points;
+  }
+
+  /**
    * The set of all fitting methods
    *
    * @namespace
@@ -191,7 +213,7 @@
         return [round(x, options.precision), round(gradient * x + intercept, options.precision)];
       };
 
-      var points = pointsPrediction(data, predict, options.residuals);
+      var points = predictPoints(data, predict, options.residuals);
 
       return {
         points: points,
@@ -224,7 +246,7 @@
         return [round(x, options.precision), round(coeffA * Math.exp(coeffB * x), options.precision)];
       };
 
-      var points = pointsPrediction(data, predict, options.residuals);
+      var points = predictPoints(data, predict, options.residuals);
 
       return {
         points: points,
@@ -255,7 +277,7 @@
         return [round(x, options.precision), round(round(coeffA + coeffB * Math.log(x), options.precision), options.precision)];
       };
 
-      var points = pointsPrediction(data, predict, options.residuals);
+      var points = predictPoints(data, predict, options.residuals);
 
       return {
         points: points,
@@ -287,7 +309,7 @@
         return [round(x, options.precision), round(round(coeffA * Math.pow(x, coeffB), options.precision), options.precision)];
       };
 
-      var points = pointsPrediction(data, predict, options.residuals);
+      var points = predictPoints(data, predict, options.residuals);
 
       return {
         points: points,
@@ -339,7 +361,7 @@
         }, 0), options.precision)];
       };
 
-      var points = pointsPrediction(data, predict, options.residuals);
+      var points = predictPoints(data, predict, options.residuals);
 
       var string = 'y = ';
       for (var _i = coefficients.length - 1; _i >= 0; _i--) {
@@ -361,34 +383,6 @@
       };
     }
   };
-
-  /**
-   * Predicts the points used for function calculation based on the predct function generated.
-   * @param  {Array<Array<number>>} data - The original points input
-   * @param  {function(number)} predict - The prediction function generated
-   * @param  {bool} enableResiduals - If it is exactly equal to true, there are residuals added to the response
-   *
-   * @return {Array<Array<number>>} - Returns the predicted points.
-   */
-  function predictPoints(data, predict, enableResiduals) {
-    var points = [];
-    // New option to maintain backwards-compatibility
-    if (enableResiduals === true) {
-      points = data.map(function (point) {
-        var predictedCoordinates = predict(point[0]);
-        // Residual = Actual - Predicted
-        return {
-          coordinates: predicted,
-          residuals: point[1] - prediction[1]
-        };
-      });
-    } else {
-      points = data.map(function (point) {
-        return predict(point[0]);
-      });
-    }
-    return points;
-  }
 
   function createWrapper() {
     var reduce = function reduce(accumulator, name) {
