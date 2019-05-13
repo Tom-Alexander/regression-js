@@ -1,5 +1,4 @@
 export const linear = {
-
   zeroGradient: {
     r2: NaN,
     equation: [0, 10],
@@ -44,11 +43,9 @@ export const linear = {
     data: [[10, 21], [100, null], [1000, 2001], [10000, null]],
     points: [[10, 21], [100, 201], [1000, 2001], [10000, 20001]],
   },
-
 };
 
 export const exponential = {
-
   growthGreaterThanZero: {
     r2: 1,
     equation: [2, 2],
@@ -118,7 +115,6 @@ export const power = {
 };
 
 export const polynomial = {
-
   positiveLinearGradient: {
     config: { order: 1 },
     r2: 1,
@@ -208,5 +204,4 @@ export const polynomial = {
     data: [[1, 6], [2, 11], [3, 18], [4, 27], [5, 38], [6, 51]],
     points: [[1, 6], [2, 11], [3, 18], [4, 27], [5, 38], [6, 51]],
   },
-
 };

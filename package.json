@@ -12,7 +12,7 @@
   "keywords": [
     "regression",
     "data",
-    "fiting",
+    "fitting",
     "modeling",
     "analysis"
   ],
@@ -33,9 +33,12 @@
     "chai": "^3.5.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-prettier": "^3.1.0",
     "mocha": "^3.2.0",
     "nyc": "^11.0.3",
+    "prettier": "1.17.0",
     "uglify-js": "3"
   },
   "author": "Tom Alexander <me@tomalexander.co.nz>"

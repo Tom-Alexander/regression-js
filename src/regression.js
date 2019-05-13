@@ -1,14 +1,14 @@
 const DEFAULT_OPTIONS = { order: 2, precision: 2, period: null };
 
 /**
-* Determine the coefficient of determination (r^2) of a fit from the observations
-* and predictions.
-*
-* @param {Array<Array<number>>} data - Pairs of observed x-y values
-* @param {Array<Array<number>>} results - Pairs of observed predicted x-y values
-*
-* @return {number} - The r^2 value, or NaN if one cannot be calculated.
-*/
+ * Determine the coefficient of determination (r^2) of a fit from the observations
+ * and predictions.
+ *
+ * @param {Array<Array<number>>} data - Pairs of observed x-y values
+ * @param {Array<Array<number>>} results - Pairs of observed predicted x-y values
+ *
+ * @return {number} - The r^2 value, or NaN if one cannot be calculated.
+ */
 function determinationCoefficient(data, results) {
   const predictions = [];
   const observations = [];
@@ -25,27 +25,27 @@ function determinationCoefficient(data, results) {
 
   const ssyy = observations.reduce((a, observation) => {
     const difference = observation[1] - mean;
-    return a + (difference * difference);
+    return a + difference * difference;
   }, 0);
 
   const sse = observations.reduce((accum, observation, index) => {
     const prediction = predictions[index];
     const residual = observation[1] - prediction[1];
-    return accum + (residual * residual);
+    return accum + residual * residual;
   }, 0);
 
-  return 1 - (sse / ssyy);
+  return 1 - sse / ssyy;
 }
 
 /**
-* Determine the solution of a system of linear equations A * x = b using
-* Gaussian elimination.
-*
-* @param {Array<Array<number>>} input - A 2-d matrix of data in row-major form [ A | b ]
-* @param {number} order - How many degrees to solve for
-*
-* @return {Array<number>} - Vector of normalized solution coefficients matrix (x)
-*/
+ * Determine the solution of a system of linear equations A * x = b using
+ * Gaussian elimination.
+ *
+ * @param {Array<Array<number>>} input - A 2-d matrix of data in row-major form [ A | b ]
+ * @param {number} order - How many degrees to solve for
+ *
+ * @return {Array<number>} - Vector of normalized solution coefficients matrix (x)
+ */
 function gaussianElimination(input, order) {
   const matrix = input;
   const n = input.length - 1;
@@ -85,25 +85,25 @@ function gaussianElimination(input, order) {
 }
 
 /**
-* Round a number to a precision, specificed in number of decimal places
-*
-* @param {number} number - The number to round
-* @param {number} precision - The number of decimal places to round to:
-*                             > 0 means decimals, < 0 means powers of 10
-*
-*
-* @return {numbr} - The number, rounded
-*/
+ * Round a number to a precision, specificed in number of decimal places
+ *
+ * @param {number} number - The number to round
+ * @param {number} precision - The number of decimal places to round to:
+ *                             > 0 means decimals, < 0 means powers of 10
+ *
+ *
+ * @return {number} - The number, rounded
+ */
 function round(number, precision) {
   const factor = 10 ** precision;
   return Math.round(number * factor) / factor;
 }
 
 /**
-* The set of all fitting methods
-*
-* @namespace
-*/
+ * The set of all fitting methods
+ *
+ * @namespace
+ */
 const methods = {
   linear(data, options) {
     const sum = [0, 0, 0, 0, 0];
@@ -120,15 +120,15 @@ const methods = {
       }
     }
 
-    const run = ((len * sum[2]) - (sum[0] * sum[0]));
-    const rise = ((len * sum[3]) - (sum[0] * sum[1]));
+    const run = len * sum[2] - sum[0] * sum[0];
+    const rise = len * sum[3] - sum[0] * sum[1];
     const gradient = run === 0 ? 0 : round(rise / run, options.precision);
-    const intercept = round((sum[1] / len) - ((gradient * sum[0]) / len), options.precision);
+    const intercept = round(sum[1] / len - (gradient * sum[0]) / len, options.precision);
 
-    const predict = x => ([
+    const predict = x => [
       round(x, options.precision),
-      round((gradient * x) + intercept, options.precision)]
-    );
+      round(gradient * x + intercept, options.precision),
+    ];
 
     const points = data.map(point => predict(point[0]));
 
@@ -155,15 +155,15 @@ const methods = {
       }
     }
 
-    const denominator = ((sum[1] * sum[2]) - (sum[5] * sum[5]));
-    const a = Math.exp(((sum[2] * sum[3]) - (sum[5] * sum[4])) / denominator);
-    const b = ((sum[1] * sum[4]) - (sum[5] * sum[3])) / denominator;
+    const denominator = sum[1] * sum[2] - sum[5] * sum[5];
+    const a = Math.exp((sum[2] * sum[3] - sum[5] * sum[4]) / denominator);
+    const b = (sum[1] * sum[4] - sum[5] * sum[3]) / denominator;
     const coeffA = round(a, options.precision);
     const coeffB = round(b, options.precision);
-    const predict = x => ([
+    const predict = x => [
       round(x, options.precision),
       round(coeffA * Math.exp(coeffB * x), options.precision),
-    ]);
+    ];
 
     const points = data.map(point => predict(point[0]));
 
@@ -185,18 +185,18 @@ const methods = {
         sum[0] += Math.log(data[n][0]);
         sum[1] += data[n][1] * Math.log(data[n][0]);
         sum[2] += data[n][1];
-        sum[3] += (Math.log(data[n][0]) ** 2);
+        sum[3] += Math.log(data[n][0]) ** 2;
       }
     }
 
-    const a = ((len * sum[1]) - (sum[2] * sum[0])) / ((len * sum[3]) - (sum[0] * sum[0]));
+    const a = (len * sum[1] - sum[2] * sum[0]) / (len * sum[3] - sum[0] * sum[0]);
     const coeffB = round(a, options.precision);
-    const coeffA = round((sum[2] - (coeffB * sum[0])) / len, options.precision);
+    const coeffA = round((sum[2] - coeffB * sum[0]) / len, options.precision);
 
-    const predict = x => ([
+    const predict = x => [
       round(x, options.precision),
-      round(round(coeffA + (coeffB * Math.log(x)), options.precision), options.precision),
-    ]);
+      round(round(coeffA + coeffB * Math.log(x), options.precision), options.precision),
+    ];
 
     const points = data.map(point => predict(point[0]));
 
@@ -218,19 +218,19 @@ const methods = {
         sum[0] += Math.log(data[n][0]);
         sum[1] += Math.log(data[n][1]) * Math.log(data[n][0]);
         sum[2] += Math.log(data[n][1]);
-        sum[3] += (Math.log(data[n][0]) ** 2);
+        sum[3] += Math.log(data[n][0]) ** 2;
       }
     }
 
-    const b = ((len * sum[1]) - (sum[0] * sum[2])) / ((len * sum[3]) - (sum[0] ** 2));
-    const a = ((sum[2] - (b * sum[0])) / len);
+    const b = (len * sum[1] - sum[0] * sum[2]) / (len * sum[3] - sum[0] ** 2);
+    const a = (sum[2] - b * sum[0]) / len;
     const coeffA = round(Math.exp(a), options.precision);
     const coeffB = round(b, options.precision);
 
-    const predict = x => ([
+    const predict = x => [
       round(x, options.precision),
-      round(round(coeffA * (x ** coeffB), options.precision), options.precision),
-    ]);
+      round(round(coeffA * x ** coeffB, options.precision), options.precision),
+    ];
 
     const points = data.map(point => predict(point[0]));
 
@@ -254,7 +254,7 @@ const methods = {
     for (let i = 0; i < k; i++) {
       for (let l = 0; l < len; l++) {
         if (data[l][1] !== null) {
-          a += (data[l][0] ** i) * data[l][1];
+          a += data[l][0] ** i * data[l][1];
         }
       }
 
@@ -277,13 +277,13 @@ const methods = {
 
     const coefficients = gaussianElimination(rhs, k).map(v => round(v, options.precision));
 
-    const predict = x => ([
+    const predict = x => [
       round(x, options.precision),
       round(
-        coefficients.reduce((sum, coeff, power) => sum + (coeff * (x ** power)), 0),
-        options.precision,
+        coefficients.reduce((sum, coeff, power) => sum + coeff * x ** power, 0),
+        options.precision
       ),
-    ]);
+    ];
 
     const points = data.map(point => predict(point[0]));
 

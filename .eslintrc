@@ -1,7 +1,7 @@
 {
-  "extends": "airbnb-base",
+  "extends": ["airbnb-base", "plugin:prettier/recommended"],
   "rules": {
     "import/prefer-default-export": 0,
     "no-plusplus": 0
-  },
+  }
 }
