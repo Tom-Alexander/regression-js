@@ -13,13 +13,13 @@ describe('round', () => {
 });
 
 describe('models', () => {
-  Object.keys(models).forEach((model) => {
+  Object.keys(models).forEach(model => {
     describe(model, () => {
-      Object.keys(models[model]).forEach((name) => {
+      Object.keys(models[model]).forEach(name => {
         const example = models[model][name];
         describe(name, () => {
           it(`correctly predicts ${name}`, () => {
-            let result = regression[model](example.data, example.config);
+            const result = regression[model](example.data, example.config);
             delete result.predict;
             expect(result).to.deep.equal({
               r2: example.r2,
