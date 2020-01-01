@@ -21,7 +21,7 @@
     "lint": "eslint src/** test/**",
     "test": "npm run lint && nyc --reporter=lcov mocha --require @babel/register",
     "build": "npm run clean && npm run build-regression-js && npm run build-regression-min-js",
-    "build-regression-js": "BABEL_ENV=production babel  --presets=@babel/env src/regression.js --out-file dist/regression.js",
+    "build-regression-js": "BABEL_ENV=production babel  --presets=@babel/env src --out-dir dist",
     "build-regression-min-js": "uglifyjs dist/regression.js --output dist/regression.min.js"
   },
   "devDependencies": {

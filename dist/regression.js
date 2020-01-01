@@ -1,11 +1,5 @@
 "use strict";
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -14,45 +8,21 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _require = require('./utils'),
+    round = _require.round,
+    deriveDataProperties = _require.deriveDataProperties;
+
 var DEFAULT_OPTIONS = {
   order: 2,
   precision: 2,
   period: null
 };
-/**
-* Determine the coefficient of determination (r^2) of a fit from the observations
-* and predictions.
-*
-* @param {Array<Array<number>>} data - Pairs of observed x-y values
-* @param {Array<Array<number>>} results - Pairs of observed predicted x-y values
-*
-* @return {number} - The r^2 value, or NaN if one cannot be calculated.
-*/
-
-function determinationCoefficient(data, results) {
-  var predictions = [];
-  var observations = [];
-  data.forEach(function (d, i) {
-    if (d[1] !== null) {
-      observations.push(d);
-      predictions.push(results[i]);
-    }
-  });
-  var sum = observations.reduce(function (a, observation) {
-    return a + observation[1];
-  }, 0);
-  var mean = sum / observations.length;
-  var ssyy = observations.reduce(function (a, observation) {
-    var difference = observation[1] - mean;
-    return a + difference * difference;
-  }, 0);
-  var sse = observations.reduce(function (accum, observation, index) {
-    var prediction = predictions[index];
-    var residual = observation[1] - prediction[1];
-    return accum + residual * residual;
-  }, 0);
-  return 1 - sse / ssyy;
-}
 /**
 * Determine the solution of a system of linear equations A * x = b using
 * Gaussian elimination.
@@ -62,7 +32,6 @@ function determinationCoefficient(data, results) {
 *
 * @return {Array<number>} - Vector of normalized solution coefficients matrix (x)
 */
-
 
 function gaussianElimination(input, order) {
   var matrix = input;
@@ -104,22 +73,6 @@ function gaussianElimination(input, order) {
   return coefficients;
 }
 /**
-* Round a number to a precision, specificed in number of decimal places
-*
-* @param {number} number - The number to round
-* @param {number} precision - The number of decimal places to round to:
-*                             > 0 means decimals, < 0 means powers of 10
-*
-*
-* @return {numbr} - The number, rounded
-*/
-
-
-function round(number, precision) {
-  var factor = Math.pow(10, precision);
-  return Math.round(number * factor) / factor;
-}
-/**
 * The set of all fitting methods
 *
 * @namespace
@@ -151,20 +104,11 @@ var methods = {
       return [round(x, options.precision), round(gradient * x + intercept, options.precision)];
     };
 
-    var points = data.map(function (point) {
-      return predict(point[0]);
-    });
-    var residuals = points.map(function (point, index) {
-      return [point[0], point[1] - data[index][1]];
-    });
-    return {
-      points: points,
-      residuals: residuals,
+    return _objectSpread({
       predict: predict,
       equation: [gradient, intercept],
-      r2: round(determinationCoefficient(data, points), options.precision),
       string: intercept === 0 ? "y = ".concat(gradient, "x") : "y = ".concat(gradient, "x + ").concat(intercept)
-    };
+    }, deriveDataProperties(data, predict, options));
   },
   exponential: function exponential(data, options) {
     var sum = [0, 0, 0, 0, 0, 0];
@@ -190,20 +134,11 @@ var methods = {
       return [round(x, options.precision), round(coeffA * Math.exp(coeffB * x), options.precision)];
     };
 
-    var points = data.map(function (point) {
-      return predict(point[0]);
-    });
-    var residuals = points.map(function (point, index) {
-      return [point[0], point[1] - data[index][1]];
-    });
-    return {
-      points: points,
-      residuals: residuals,
+    return _objectSpread({
       predict: predict,
       equation: [coeffA, coeffB],
-      string: "y = ".concat(coeffA, "e^(").concat(coeffB, "x)"),
-      r2: round(determinationCoefficient(data, points), options.precision)
-    };
+      string: "y = ".concat(coeffA, "e^(").concat(coeffB, "x)")
+    }, deriveDataProperties(data, predict, options));
   },
   logarithmic: function logarithmic(data, options) {
     var sum = [0, 0, 0, 0];
@@ -226,20 +161,11 @@ var methods = {
       return [round(x, options.precision), round(round(coeffA + coeffB * Math.log(x), options.precision), options.precision)];
     };
 
-    var points = data.map(function (point) {
-      return predict(point[0]);
-    });
-    var residuals = points.map(function (point, index) {
-      return [point[0], point[1] - data[index][1]];
-    });
-    return {
-      points: points,
-      residuals: residuals,
+    return _objectSpread({
       predict: predict,
       equation: [coeffA, coeffB],
-      string: "y = ".concat(coeffA, " + ").concat(coeffB, " ln(x)"),
-      r2: round(determinationCoefficient(data, points), options.precision)
-    };
+      string: "y = ".concat(coeffA, " + ").concat(coeffB, " ln(x)")
+    }, deriveDataProperties(data, predict, options));
   },
   power: function power(data, options) {
     var sum = [0, 0, 0, 0, 0];
@@ -263,20 +189,11 @@ var methods = {
       return [round(x, options.precision), round(round(coeffA * Math.pow(x, coeffB), options.precision), options.precision)];
     };
 
-    var points = data.map(function (point) {
-      return predict(point[0]);
-    });
-    var residuals = points.map(function (point, index) {
-      return [point[0], point[1] - data[index][1]];
-    });
-    return {
-      points: points,
-      residuals: residuals,
+    return _objectSpread({
       predict: predict,
       equation: [coeffA, coeffB],
-      string: "y = ".concat(coeffA, "x^").concat(coeffB),
-      r2: round(determinationCoefficient(data, points), options.precision)
-    };
+      string: "y = ".concat(coeffA, "x^").concat(coeffB)
+    }, deriveDataProperties(data, predict, options));
   },
   polynomial: function polynomial(data, options) {
     var lhs = [];
@@ -322,12 +239,6 @@ var methods = {
       }, 0), options.precision)];
     };
 
-    var points = data.map(function (point) {
-      return predict(point[0]);
-    });
-    var residuals = points.map(function (point, index) {
-      return [point[0], point[1] - data[index][1]];
-    });
     var string = 'y = ';
 
     for (var _i = coefficients.length - 1; _i >= 0; _i--) {
@@ -340,14 +251,11 @@ var methods = {
       }
     }
 
-    return {
+    return _objectSpread({
       string: string,
-      points: points,
-      residuals: residuals,
       predict: predict,
-      equation: _toConsumableArray(coefficients).reverse(),
-      r2: round(determinationCoefficient(data, points), options.precision)
-    };
+      equation: _toConsumableArray(coefficients).reverse()
+    }, deriveDataProperties(data, predict, options));
   }
 };
 
