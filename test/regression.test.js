@@ -19,12 +19,13 @@ describe('models', () => {
         const example = models[model][name];
         describe(name, () => {
           it(`correctly predicts ${name}`, () => {
-            let result = regression[model](example.data, example.config);
+            const result = regression[model](example.data, example.config);
             delete result.predict;
             expect(result).to.deep.equal({
               r2: example.r2,
               string: example.string,
               points: example.points,
+              residuals: example.residuals,
               equation: example.equation,
             });
           });
@@ -37,8 +38,8 @@ describe('models', () => {
           it('should take precision options', () => {
             const notSpecified = regression[model](example.data, example.config);
             const specified = regression[model](example.data, { ...example.config, precision: 4 });
-            expect(specified.equation).to.deep.equal(example.equation.map(v => _round(v, 4)));
-            expect(notSpecified.equation).to.deep.equal(example.equation.map(v => _round(v, 2)));
+            expect(specified.equation).to.deep.equal(example.equation.map((v) => _round(v, 4)));
+            expect(notSpecified.equation).to.deep.equal(example.equation.map((v) => _round(v, 2)));
           });
         });
       });
