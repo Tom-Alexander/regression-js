@@ -51,6 +51,7 @@ Below are the default values for the configuration parameter.
 - `equation`: an array containing the coefficients of the equation
 - `string`: A string representation of the equation
 - `points`: an array containing the predicted data in the domain of the input
+- `residuals`: an array containing the difference between predicted data and source data in the domain of the input
 - `r2`: the coefficient of determination (<i>R</i><sup>2</sup>)
 - `predict(x)`: This function will return the predicted value
 
@@ -80,6 +81,7 @@ const result = regression.polynomial(data, { order: 3 });
 
 ## Development
 
-- Install the dependencies with `npm install`
-- To build the assets in the `dist` directory, use `npm run build`
-- You can run the tests with: `npm run test`.
+- Install the dependencies with `yarn install`
+- To build the assets in the `dist` directory, use `yarn build`
+- You can run the tests with: `yarn test` or `yarn test --watch`.
+- `yarn lint --fix`
