@@ -80,6 +80,7 @@ const result = regression.polynomial(data, { order: 3 });
 
 ## Development
 
-- Install the dependencies with `npm install`
-- To build the assets in the `dist` directory, use `npm run build`
-- You can run the tests with: `npm run test`.
+- Install the dependencies with `yarn install`
+- To build the assets in the `dist` directory, use `yarn build`
+- You can run the tests with: `yarn test` or `yarn test --watch`.
+- `yarn lint --fix`
