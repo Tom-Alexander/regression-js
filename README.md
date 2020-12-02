@@ -19,7 +19,7 @@ regression-js is a JavaScript module containing a collection of linear least-squ
 </div>
 
 ## Installation
-This module works on node and in the browser. It is available as the 'regression' package on [npm](https://www.npmjs.com/package/regression). It is also available on a [CDN](https://cdnjs.com/libraries/regression).
+This module works on node and in the browser. It is available as the 'regression' package on [npm](https://www.npmjs.com/package/regression). It is also available on a [CDN](https://cdnjs.com/libraries/regression), however this will require different syntax than the one shown below (refer to the docs for v1.4.0).
 
 ### npm
 
